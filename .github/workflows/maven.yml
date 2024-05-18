@@ -31,9 +31,8 @@ jobs:
         cache: maven
 
     - name: Change working directory to back-spring
-      uses: actions/cd@v3
-      with:
-        path: 'back-spring'  # Replace with the actual directory path containing your pom.xml
+      run: |
+        cd back-spring
 
       
     - name: Build with Maven
