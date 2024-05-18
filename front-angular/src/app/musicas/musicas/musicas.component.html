@@ -1,0 +1,62 @@
+<mat-card class="tabelaMusicas">
+  <mat-card-header>
+    <mat-toolbar color="primary">
+      <span>Minhas Músicas</span>
+      <span class="espacador"></span>
+      <button mat-mini-fab aria-disabled="Adicionar música" (click)="onAdicionar()">
+      <mat-icon>add</mat-icon>
+      </button>
+  </mat-toolbar>
+  </mat-card-header>
+  <mat-card-content>
+    <div *ngIf="fonteDados$ | async as fonteDados; else carregando">
+      <table mat-table [dataSource]="fonteDados" class="mat-elevation-z8">
+        <!-- Coluna Foto -->
+        <ng-container matColumnDef="foto">
+          <th mat-header-cell *matHeaderCellDef>Foto</th>
+          <td mat-cell *matCellDef="let musica"><img [src]="'data:image/jpeg;base64,' + musica.foto" alt="Minha Imagem" height="160px"></td>
+        </ng-container>
+
+        <!-- Coluna Nome -->
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef>Nome</th>
+          <td mat-cell *matCellDef="let musica">{{ musica.nome }}</td>
+        </ng-container>
+
+        <!-- Coluna Artista -->
+        <ng-container matColumnDef="artista">
+          <th mat-header-cell *matHeaderCellDef>Artista</th>
+          <td mat-cell *matCellDef="let musica">{{ musica.artista }}</td>
+        </ng-container>
+
+        <!-- Coluna Gênero Musical -->
+        <ng-container matColumnDef="generoMusical">
+          <th mat-header-cell *matHeaderCellDef>Gênero musical</th>
+          <td mat-cell *matCellDef="let musica">{{ musica.generoMusical }}
+            <mat-icon aria-hidden="false" aria-label="Gênero da Música">{{ musica.generoMusical | categoria }}</mat-icon>
+          </td>
+        </ng-container>
+
+        <!-- Coluna Duração -->
+        <ng-container matColumnDef="duracao">
+          <th mat-header-cell *matHeaderCellDef>Duração</th>
+          <td mat-cell *matCellDef="let musica">{{ musica.duracao }}</td>
+        </ng-container>
+
+        <!-- Coluna Data de Lançamento -->
+        <ng-container matColumnDef="dataLancamento">
+          <th mat-header-cell *matHeaderCellDef>Data de Lançamento</th>
+          <td mat-cell *matCellDef="let musica">{{ musica.dataLancamento }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="colunasMostradas"></tr>
+        <tr mat-row *matRowDef="let row; columns: colunasMostradas"></tr>
+      </table>
+    </div>
+  </mat-card-content>
+  <ng-template #carregando>
+    <div class="carregando-spinner">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
+</mat-card>
