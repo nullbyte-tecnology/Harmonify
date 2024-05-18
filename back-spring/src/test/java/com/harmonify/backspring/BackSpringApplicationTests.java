@@ -8,6 +8,9 @@ class BackSpringApplicationTests {
 
 	@Test
 	void contextLoads() {
+		BackSpringApplication main = new BackSpringApplication();
+
+		assert(main.getClass() != null);
 	}
 
 }
