@@ -1,17 +1,17 @@
 package com.harmonify.backspring.dominio.dto;
 
-import com.harmonify.backspring.dominio.Musica;
-import org.junit.jupiter.api.Test;
-
-import java.sql.Date;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.harmonify.backspring.dominio.Musica;
+import java.sql.Date;
+import org.junit.jupiter.api.Test;
 
 class MusicaDTOTest {
 
   @Test
   void testConstrutorComMusica() {
-    MusicaDTO musicaDTOTeste = new MusicaDTO("Nome da Música", "Artista", "Rock", "03:45", Date.valueOf("2022-01-01"), new byte[0]);
+    MusicaDTO musicaDTOTeste = new MusicaDTO("Nome da Música", "Artista", "Rock", "03:45",
+        Date.valueOf("2022-01-01"), new byte[0]);
 
     Musica musica = new Musica(musicaDTOTeste);
 
@@ -27,7 +27,8 @@ class MusicaDTOTest {
 
   @Test
   void testConstrutorComValores() {
-    MusicaDTO musicaDTO = new MusicaDTO("Nome da Música", "Artista", "Rock", "03:45", Date.valueOf("2022-01-01"), new byte[0]);
+    MusicaDTO musicaDTO = new MusicaDTO("Nome da Música", "Artista", "Rock", "03:45",
+        Date.valueOf("2022-01-01"), new byte[0]);
 
     assertThat(musicaDTO.nome()).isEqualTo("Nome da Música");
     assertThat(musicaDTO.artista()).isEqualTo("Artista");

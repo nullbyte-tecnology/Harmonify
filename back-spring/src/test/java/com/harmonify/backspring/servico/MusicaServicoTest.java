@@ -1,7 +1,14 @@
 package com.harmonify.backspring.servico;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.harmonify.backspring.dominio.Musica;
 import com.harmonify.backspring.dominio.dto.MusicaDTO;
@@ -32,8 +39,10 @@ class MusicaServicoTest {
   @Test
   void testListarMusicas() {
 
-    MusicaDTO musicaDTO1 = new MusicaDTO("Musica 1", "Artista 1", "Rock", "3:00", Date.valueOf("2022-01-01"), new byte[0]);
-    MusicaDTO musicaDTO2 = new MusicaDTO("Musica 2", "Artista 2", "Pop", "4:00", Date.valueOf("2022-01-01"), new byte[0]);
+    MusicaDTO musicaDTO1 = new MusicaDTO("Musica 1", "Artista 1", "Rock", "3:00",
+        Date.valueOf("2022-01-01"), new byte[0]);
+    MusicaDTO musicaDTO2 = new MusicaDTO("Musica 2", "Artista 2", "Pop", "4:00",
+        Date.valueOf("2022-01-01"), new byte[0]);
 
     Musica musica1 = new Musica(musicaDTO1);
     Musica musica2 = new Musica(musicaDTO2);
@@ -57,7 +66,8 @@ class MusicaServicoTest {
 
   @Test
   void testSalvarMusicaValida() {
-    MusicaDTO musicaDTO = new MusicaDTO("Musica 1", "Artista 1", "Rock", "3:00", Date.valueOf("2022-01-01"), new byte[0]);
+    MusicaDTO musicaDTO = new MusicaDTO("Musica 1", "Artista 1", "Rock", "3:00",
+        Date.valueOf("2022-01-01"), new byte[0]);
 
     musicaServico.salvarMusica(musicaDTO);
 
@@ -66,7 +76,8 @@ class MusicaServicoTest {
 
   @Test
   void testSalvarMusicaInvalida() {
-    MusicaDTO musicaDTO = new MusicaDTO("Musica 1", "Artista 1", "Rap", "3:00", Date.valueOf("2022-01-01"), new byte[0]);
+    MusicaDTO musicaDTO = new MusicaDTO("Musica 1", "Artista 1", "Rap", "3:00",
+        Date.valueOf("2022-01-01"), new byte[0]);
 
     musicaServico.salvarMusica(musicaDTO);
 
@@ -75,7 +86,8 @@ class MusicaServicoTest {
 
   @Test
   void testValidarGeneroMusicalValido() {
-    MusicaDTO musicaDTO = new MusicaDTO("Musica 1", "Artista 1", "Rock", "3:00", Date.valueOf("2022-01-01"), new byte[0]);
+    MusicaDTO musicaDTO = new MusicaDTO("Musica 1", "Artista 1", "Rock", "3:00",
+        Date.valueOf("2022-01-01"), new byte[0]);
 
     boolean resultado = musicaServico.validarMusica(musicaDTO);
 
@@ -84,7 +96,8 @@ class MusicaServicoTest {
 
   @Test
   void testValidarGeneroMusicalInvalido() {
-    MusicaDTO musicaDTO = new MusicaDTO("Musica 1", "Artista 1", "Rap", "3:00", Date.valueOf("2022-01-01"), new byte[0]);
+    MusicaDTO musicaDTO = new MusicaDTO("Musica 1", "Artista 1", "Rap", "3:00",
+        Date.valueOf("2022-01-01"), new byte[0]);
 
     boolean resultado = musicaServico.validarMusica(musicaDTO);
 

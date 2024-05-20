@@ -1,19 +1,19 @@
 package com.harmonify.backspring.dominio.dto;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.harmonify.backspring.dominio.Musica;
+import java.sql.Date;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
-
-import java.sql.Date;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class RespostaDTOTest {
 
   @Test
   void testConstrutorComMusica() {
     byte[] foto = {0x12, 0x34, 0x56, 0x78};
-    MusicaDTO musicaDTO = new MusicaDTO("Nome da Música", "Artista", "Rock", "03:45", Date.valueOf("2022-01-01"), foto);
+    MusicaDTO musicaDTO = new MusicaDTO("Nome da Música", "Artista", "Rock", "03:45",
+        Date.valueOf("2022-01-01"), foto);
     Musica musica = new Musica(musicaDTO);
 
     RespostaDTO respostaDTO = new RespostaDTO(musica);
@@ -29,7 +29,8 @@ class RespostaDTOTest {
   @Test
   void testConstrutorComValores() {
     byte[] foto = {0x12, 0x34, 0x56, 0x78};
-    RespostaDTO respostaDTO = new RespostaDTO("Nome da Música", "Artista", "Rock", "03:45", Date.valueOf("2022-01-01"), Base64.encodeBase64String(foto));
+    RespostaDTO respostaDTO = new RespostaDTO("Nome da Música", "Artista", "Rock", "03:45",
+        Date.valueOf("2022-01-01"), Base64.encodeBase64String(foto));
 
     assertThat(respostaDTO.nome()).isEqualTo("Nome da Música");
     assertThat(respostaDTO.artista()).isEqualTo("Artista");

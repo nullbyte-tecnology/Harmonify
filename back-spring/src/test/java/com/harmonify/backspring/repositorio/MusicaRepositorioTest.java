@@ -1,6 +1,7 @@
 package com.harmonify.backspring.repositorio;
 
-import com.harmonify.backspring.BackSpringApplication;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.harmonify.backspring.dominio.Musica;
 import com.harmonify.backspring.dominio.dto.MusicaDTO;
 import java.sql.Date;
@@ -10,8 +11,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.TestPropertySource;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
