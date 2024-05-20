@@ -3,7 +3,6 @@ package com.harmonify.backspring.controlador;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.harmonify.backspring.dominio.dto.MusicaDTO;
 import com.harmonify.backspring.servico.MusicaServico;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +41,6 @@ class MusicaControladorTest {
 
   @Test
   void testSalvarMusica() throws Exception {
-    MusicaDTO musicaDTO = new MusicaDTO("Nome da Música", "Artista", "Rock", "03:30", null, null);
     String json = """
         {
           "titulo": "Musica 1",
