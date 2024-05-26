@@ -3,7 +3,7 @@ package com.harmonify.backspring.servico;
 import com.harmonify.backspring.dominio.Musica;
 import com.harmonify.backspring.dominio.dto.MusicaDTO;
 import com.harmonify.backspring.dominio.dto.RespostaDTO;
-import com.harmonify.backspring.dominio.enums.GENERO_MUSICAL;
+import com.harmonify.backspring.dominio.enums.GeneroMusical;
 import com.harmonify.backspring.repositorio.MusicaRepositorio;
 import java.util.EnumSet;
 import java.util.List;
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class MusicaServico {
 
-  private static final EnumSet<GENERO_MUSICAL> GENEROS_MUSICAIS_VALIDOS = EnumSet.allOf(
-      GENERO_MUSICAL.class);
+  private static final EnumSet<GeneroMusical> GENEROS_MUSICAIS_VALIDOS = EnumSet.allOf(
+      GeneroMusical.class);
   private final MusicaRepositorio musicaRepositorio;
 
   public MusicaServico(MusicaRepositorio musicaRepositorio) {
