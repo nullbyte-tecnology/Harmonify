@@ -3,10 +3,7 @@ package com.harmonify.backspring.controlador;
 import com.harmonify.backspring.dominio.dto.ArtistaDTO;
 import com.harmonify.backspring.servico.ArtistaServico;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,6 +22,11 @@ public class ArtistaControlador {
     @PostMapping
     public void salvarArtista(ArtistaDTO artistaDTO){
         artistaServico.salvarArtista(artistaDTO);
+    }
+
+    @PutMapping("/{id}")
+    public void atualizarArtista(@PathVariable Long id, @RequestBody ArtistaDTO artistaDTO) {
+        artistaServico.atualizarArtista(id, artistaDTO);
     }
 
 }
