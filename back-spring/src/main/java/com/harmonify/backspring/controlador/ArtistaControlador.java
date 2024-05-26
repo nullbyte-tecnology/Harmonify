@@ -2,17 +2,19 @@ package com.harmonify.backspring.controlador;
 
 import com.harmonify.backspring.dominio.dto.ArtistaDTO;
 import com.harmonify.backspring.servico.ArtistaServico;
-import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/artistas")
-@AllArgsConstructor
 public class ArtistaControlador {
 
     private final ArtistaServico artistaServico;
+
+    public ArtistaControlador(ArtistaServico artistaServico) {
+        this.artistaServico = artistaServico;
+    }
 
     @GetMapping
     public List<ArtistaDTO> listarArtistas(){

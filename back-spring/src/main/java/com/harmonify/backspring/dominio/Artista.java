@@ -27,6 +27,8 @@ public class Artista {
     private String biografia;
     @Column(length = 50, nullable = false)
     private String paisOrigem;
+    @Column(length = 50, nullable = false)
+    private String genero;
 
     public Artista(ArtistaDTO artistaDTO){
         this.nome = artistaDTO.nome();
