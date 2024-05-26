@@ -29,4 +29,10 @@ public class ArtistaControlador {
         artistaServico.atualizarArtista(id, artistaDTO);
     }
 
+    @GetMapping("/genero/{genero}")
+    public List<ArtistaDTO> listarArtistasPorGenero(@PathVariable String genero) {
+        return artistaServico.listarArtistasPorGenero(genero);
+    }
+
+
 }
