@@ -1,2 +1,5 @@
 /back-spring/target/
 /back-spring/target
+/front-angular/node_modules
+/front-angular/.angular
+/back-spring/.idea
