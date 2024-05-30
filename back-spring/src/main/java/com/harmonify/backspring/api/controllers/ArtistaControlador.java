@@ -27,7 +27,7 @@ public class ArtistaControlador {
   }
 
   @PostMapping
-  public void salvarArtista(ArtistaDTO artistaDTO) {
+  public void salvarArtista(@RequestBody ArtistaDTO artistaDTO) {
     artistaServico.salvarArtista(artistaDTO);
   }
 
@@ -40,6 +40,5 @@ public class ArtistaControlador {
   public List<ArtistaDTO> listarArtistasPorGenero(@PathVariable String genero) {
     return artistaServico.listarArtistasPorGenero(genero);
   }
-
 
 }

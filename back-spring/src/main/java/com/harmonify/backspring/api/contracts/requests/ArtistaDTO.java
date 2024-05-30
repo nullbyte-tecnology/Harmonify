@@ -7,6 +7,6 @@ public record ArtistaDTO(String nome, String genero, String nacionalidade, Strin
 
   public ArtistaDTO(Artista artista) {
     this(artista.getNome(), artista.getGenero(), artista.getNacionalidade(),
-        artista.getNacionalidade(), artista.getPaisOrigem());
+        artista.getBiografia(), artista.getPaisOrigem());
   }
 }
