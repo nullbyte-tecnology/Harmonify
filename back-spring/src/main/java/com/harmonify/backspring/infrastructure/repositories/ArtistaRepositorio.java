@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ArtistaRepositorio extends JpaRepository<Artista, Long> {
 
-  List<Artista> findByGenero(String genero);
+  List<Artista> findAllByGenero(String genero);
 }

@@ -36,7 +36,7 @@ public class ArtistaServico {
   }
 
   public List<ArtistaDTO> listarArtistasPorGenero(String genero) {
-    List<Artista> artistas = artistaRepositorio.findByGenero(genero);
+    List<Artista> artistas = artistaRepositorio.findAllByGenero(genero);
     return artistas.stream().map(ArtistaDTO::new).toList();
   }
 }
