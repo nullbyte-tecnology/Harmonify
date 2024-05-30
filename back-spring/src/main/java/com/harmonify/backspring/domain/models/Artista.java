@@ -38,8 +38,8 @@ public class Artista {
   public Artista(ArtistaDTO artistaDTO) {
     this.nome = artistaDTO.nome();
     this.nacionalidade = artistaDTO.nacionalidade();
+    this.genero = artistaDTO.genero();
     this.biografia = artistaDTO.biografia();
     this.paisOrigem = artistaDTO.paisOrigem();
   }
-
 }
