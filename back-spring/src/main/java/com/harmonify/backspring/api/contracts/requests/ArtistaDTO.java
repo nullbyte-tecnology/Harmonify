@@ -6,7 +6,7 @@ public record ArtistaDTO(String nome, String genero, String nacionalidade, Strin
                          String paisOrigem) {
 
   public ArtistaDTO(Artista artista) {
-    this(artista.getNome(), artista.getGenero(), artista.getNacionalidade(),
+    this(artista.getNome(), artista.getGenero(), artista.getBiografia(),
         artista.getNacionalidade(), artista.getPaisOrigem());
   }
 }
