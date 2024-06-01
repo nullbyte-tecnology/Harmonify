@@ -3,7 +3,6 @@ package com.harmonify.backspring.api.controllers;
 import com.harmonify.backspring.api.contracts.requests.ArtistaDTO;
 import com.harmonify.backspring.domain.services.ArtistaServico;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,35 +25,38 @@ public class ArtistaControlador {
   private final ArtistaServico artistaServico;
 
   @GetMapping
-  public List<ArtistaDTO> listarArtistas(@RequestParam(required = false) Optional<String> genero) {
-    return genero.map(artistaServico::listarArtistasComFiltros)
-        .orElseGet(artistaServico::listarArtistas);
+  public ResponseEntity<List<ArtistaDTO>> listarArtistas(@RequestParam(required = false) String genero) {
+    List<ArtistaDTO> artistas = artistaServico.listarArtistas(genero);
+
+    return ResponseEntity.status(HttpStatus.OK).body(artistas);
   }
 
   @GetMapping("/{id}")
-  public ArtistaDTO detalharArtista(@PathVariable UUID id) {
-    return artistaServico.encontrarArtista(id);
+  public ResponseEntity<ArtistaDTO> detalharArtista(@PathVariable UUID id) {
+    ArtistaDTO artista = artistaServico.encontrarArtista(id);
+
+    return ResponseEntity.status(HttpStatus.OK).body(artista);
   }
 
   @PostMapping
-  public void salvarArtista(@RequestBody ArtistaDTO artistaDTO) {
+  public ResponseEntity<String> salvarArtista(@RequestBody ArtistaDTO artistaDTO) {
     artistaServico.salvarArtista(artistaDTO);
+
+    return ResponseEntity.status(HttpStatus.OK).body("Artista salvo.");
   }
 
   @PutMapping("/{id}")
-  public void atualizarArtista(@PathVariable UUID id, @RequestBody ArtistaDTO artistaDTO) {
+  public ResponseEntity<String> atualizarArtista(@PathVariable UUID id, @RequestBody ArtistaDTO artistaDTO) {
     artistaServico.atualizarArtista(id, artistaDTO);
+
+    return ResponseEntity.status(HttpStatus.OK).body("Artista atualizado.");
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<String> deletarArtista(@PathVariable UUID id) {
-    boolean resultadoOperacao = artistaServico.deletarArtista(id);
+    artistaServico.deletarArtista(id);
 
-    if(resultadoOperacao) {
-      return ResponseEntity.ok("Artista excluido.");
-    }
-
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Artista não encontrado.");
+    return ResponseEntity.status(HttpStatus.OK).body("Artista excluido.");
   }
 
 }
