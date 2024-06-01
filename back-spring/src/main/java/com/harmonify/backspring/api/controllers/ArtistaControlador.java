@@ -31,6 +31,11 @@ public class ArtistaControlador {
         .orElseGet(artistaServico::listarArtistas);
   }
 
+  @GetMapping("/{id}")
+  public ArtistaDTO detalharArtista(@PathVariable UUID id) {
+    return artistaServico.encontrarArtista(id);
+  }
+
   @PostMapping
   public void salvarArtista(@RequestBody ArtistaDTO artistaDTO) {
     artistaServico.salvarArtista(artistaDTO);

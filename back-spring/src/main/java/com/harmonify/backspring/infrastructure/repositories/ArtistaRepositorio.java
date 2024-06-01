@@ -1,6 +1,7 @@
 package com.harmonify.backspring.infrastructure.repositories;
 
 import com.harmonify.backspring.domain.models.Artista;
+import com.harmonify.backspring.domain.models.enums.GeneroMusical;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
@@ -13,5 +14,4 @@ public interface ArtistaRepositorio extends JpaRepository<Artista, UUID>,
 
   List<Artista> findAll(@Nullable Specification<Artista> spec);
 
-  List<Artista> findByGenero(String genero);
 }

@@ -5,6 +5,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ArtistaEspecificacao {
 
+  private ArtistaEspecificacao() {}
+
   public static Specification<Artista> temGenero(String genero) {
     return (root, query, cb) -> genero == null ? cb.conjunction() :
         cb.equal(root.get("genero"), genero);

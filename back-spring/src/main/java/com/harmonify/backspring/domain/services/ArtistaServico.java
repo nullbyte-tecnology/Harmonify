@@ -22,6 +22,12 @@ public class ArtistaServico {
     return artistas.stream().map(ArtistaDTO::new).toList();
   }
 
+  public ArtistaDTO encontrarArtista(UUID id) {
+    Optional<Artista> artistaOpt = artistaRepositorio.findById(id);
+
+    return artistaOpt.map(ArtistaDTO::new).orElse(null);
+  }
+
   public void salvarArtista(ArtistaDTO artistaDTO) {
     Artista artista = new Artista(artistaDTO);
     artistaRepositorio.save(artista);
@@ -32,7 +38,7 @@ public class ArtistaServico {
         .orElseThrow(() -> new RuntimeException("Artista não encontrado"));
 
     artista.setNome(artistaDTO.nome());
-    artista.setNacionalidade(artistaDTO.nacionalidade());
+    artista.setFoto(artistaDTO.foto());
     artista.setBiografia(artistaDTO.biografia());
     artista.setPaisOrigem(artistaDTO.paisOrigem());
 
