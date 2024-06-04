@@ -12,5 +12,4 @@ public interface ArtistaRepositorio extends JpaRepository<Artista, UUID>,
     JpaSpecificationExecutor<Artista> {
 
   List<Artista> findAll(@Nullable Specification<Artista> spec);
-
 }

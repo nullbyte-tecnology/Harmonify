@@ -58,5 +58,4 @@ public class ArtistaControlador {
 
     return ResponseEntity.status(HttpStatus.OK).body("Artista excluido.");
   }
-
 }

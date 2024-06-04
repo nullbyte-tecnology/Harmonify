@@ -52,5 +52,4 @@ public class Artista {
     this.paisOrigem = artistaDTO.paisOrigem();
     this.genero = artistaDTO.genero();
   }
-
 }
