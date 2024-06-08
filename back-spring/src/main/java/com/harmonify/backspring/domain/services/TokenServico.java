@@ -15,13 +15,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Service
-public class TokenService {
+public class TokenServico {
 
   private static final int DURACAO_TOKEN_HORAS = 2;
   private final String secretKey;
   private final String tokenIssuer;
 
-  public TokenService(
+  public TokenServico(
       @Value("${api.security.token.secret}") String secretKey,
       @Value("${api.security.token.issuer}") String tokenIssuer) {
 
