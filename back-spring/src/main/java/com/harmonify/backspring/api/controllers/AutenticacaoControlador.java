@@ -1,5 +1,6 @@
 package com.harmonify.backspring.api.controllers;
 
+import com.harmonify.backspring.api.contracts.requests.LoginDTO;
 import com.harmonify.backspring.api.contracts.requests.UsuarioDTO;
 import com.harmonify.backspring.api.contracts.responses.TokenDTO;
 import com.harmonify.backspring.domain.services.AutenticacaoServico;
@@ -20,6 +21,13 @@ public class AutenticacaoControlador {
   @PostMapping("/cadastro")
   public ResponseEntity<TokenDTO> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
     TokenDTO tokenDTO = this.autenticacaoServico.registrarUsuario(usuarioDTO);
+
+    return ResponseEntity.status(HttpStatus.OK).body(tokenDTO);
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<TokenDTO> realizarLogin(@RequestBody LoginDTO loginDTO) {
+    TokenDTO tokenDTO = this.autenticacaoServico.realizarLogin(loginDTO);
 
     return ResponseEntity.status(HttpStatus.OK).body(tokenDTO);
   }
