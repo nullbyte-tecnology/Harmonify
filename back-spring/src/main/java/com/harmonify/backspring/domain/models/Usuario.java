@@ -1,5 +1,6 @@
 package com.harmonify.backspring.domain.models;
 
+import com.harmonify.backspring.api.contracts.requests.UsuarioDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,6 +27,11 @@ public class Usuario implements UserDetails {
 
   @Column(nullable = false, length = 50)
   private String senha;
+
+  public Usuario(UsuarioDTO usuarioDTO) {
+    this.login = usuarioDTO.login();
+    this.senha = usuarioDTO.senha();
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
