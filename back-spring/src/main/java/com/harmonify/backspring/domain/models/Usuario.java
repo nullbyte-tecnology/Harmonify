@@ -25,7 +25,7 @@ public class Usuario implements UserDetails {
   @Column(nullable = false, unique = true, length = 75)
   private String login;
 
-  @Column(nullable = false, length = 50)
+  @Column(nullable = false)
   private String senha;
 
   public Usuario(UsuarioDTO usuarioDTO) {
