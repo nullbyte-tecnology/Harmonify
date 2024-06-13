@@ -1,6 +1,8 @@
 package com.harmonify.backspring.api.controllers;
 
 import com.harmonify.backspring.api.contracts.requests.ArtistaDTO;
+import com.harmonify.backspring.api.contracts.requests.FiltroDTO;
+import com.harmonify.backspring.api.contracts.responses.RespArtistaDTO;
 import com.harmonify.backspring.domain.services.ArtistaServico;
 import java.util.List;
 import java.util.UUID;
@@ -25,15 +27,15 @@ public class ArtistaControlador {
   private final ArtistaServico artistaServico;
 
   @GetMapping
-  public ResponseEntity<List<ArtistaDTO>> listarArtistas(@RequestParam(required = false) String genero) {
-    List<ArtistaDTO> artistas = artistaServico.listarArtistas(genero);
+  public ResponseEntity<List<RespArtistaDTO>> listarArtistas(FiltroDTO filtroDTO) {
+    List<RespArtistaDTO> artistas = artistaServico.listarArtistas(filtroDTO);
 
     return ResponseEntity.status(HttpStatus.OK).body(artistas);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ArtistaDTO> detalharArtista(@PathVariable UUID id) {
-    ArtistaDTO artista = artistaServico.encontrarArtista(id);
+  public ResponseEntity<RespArtistaDTO> detalharArtista(@PathVariable UUID id) {
+    RespArtistaDTO artista = artistaServico.encontrarArtista(id);
 
     return ResponseEntity.status(HttpStatus.OK).body(artista);
   }

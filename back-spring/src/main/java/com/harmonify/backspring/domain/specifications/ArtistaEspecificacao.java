@@ -12,4 +12,9 @@ public class ArtistaEspecificacao {
         cb.equal(root.get("genero"), genero);
   }
 
+  public static Specification<Artista> temPaisOrigem(String paisOrigem) {
+    return (root, query, cb) -> paisOrigem == null ? cb.conjunction() :
+        cb.equal(root.get("paisOrigem"), paisOrigem);
+  }
+
 }
