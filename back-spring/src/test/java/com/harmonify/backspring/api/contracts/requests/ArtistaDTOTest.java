@@ -1,41 +1,53 @@
 package com.harmonify.backspring.api.contracts.requests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import com.harmonify.backspring.domain.models.Artista;
+import com.harmonify.backspring.domain.models.enums.GeneroMusical;
 import org.junit.jupiter.api.Test;
+import java.util.UUID;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ArtistaDTOTest {
 
   @Test
-  void testConstrutorComArtista() {
-    Artista artistaMock = mock(Artista.class);
-
-    when(artistaMock.getNome()).thenReturn("Nome do Artista");
-    when(artistaMock.getGenero()).thenReturn("Gênero do Artista");
-    when(artistaMock.getNacionalidade()).thenReturn("Nacionalidade do Artista");
-    when(artistaMock.getBiografia()).thenReturn("Biografia do Artista");
-    when(artistaMock.getPaisOrigem()).thenReturn("País de Origem do Artista");
-
-    ArtistaDTO artistaDTO = new ArtistaDTO(artistaMock);
-    assertEquals("Nome do Artista", artistaDTO.nome());
-    assertEquals("Gênero do Artista", artistaDTO.genero());
-    assertEquals("Nacionalidade do Artista", artistaDTO.nacionalidade());
-    assertEquals("Biografia do Artista", artistaDTO.biografia());
-    assertEquals("País de Origem do Artista", artistaDTO.paisOrigem());
+  void testDefaultConstructor() {
+    Artista artista = new Artista();
+    assertNotNull(artista);
   }
 
   @Test
-  void testConstrutorPadrao() {
-    ArtistaDTO artistaDTO = new ArtistaDTO("Nome do Artista", "Gênero do Artista",
-        "Nacionalidade do Artista", "Biografia do Artista", "País de Origem do Artista");
+  void testAllArgsConstructor() {
+    UUID id = UUID.randomUUID();
+    String nome = "Artista Teste";
+    byte[] foto = new byte[]{1, 2, 3};
+    String biografia = "Biografia Teste";
+    String paisOrigem = "Brasil";
+    GeneroMusical genero = GeneroMusical.ROCK;
 
-    assertEquals("Nome do Artista", artistaDTO.nome());
-    assertEquals("Gênero do Artista", artistaDTO.genero());
-    assertEquals("Nacionalidade do Artista", artistaDTO.nacionalidade());
-    assertEquals("Biografia do Artista", artistaDTO.biografia());
-    assertEquals("País de Origem do Artista", artistaDTO.paisOrigem());
+    Artista artista = new Artista(id, nome, foto, biografia, paisOrigem, genero);
+
+    assertEquals(id, artista.getId());
+    assertEquals(nome, artista.getNome());
+    assertArrayEquals(foto, artista.getFoto());
+    assertEquals(biografia, artista.getBiografia());
+    assertEquals(paisOrigem, artista.getPaisOrigem());
+    assertEquals(genero, artista.getGenero());
+  }
+
+  @Test
+  void testArtistaDTOConstructor() {
+    String nome = "Artista DTO";
+    byte[] foto = new byte[]{4, 5, 6};
+    String biografia = "Biografia DTO";
+    String paisOrigem = "Portugal";
+    GeneroMusical genero = GeneroMusical.JAZZ;
+
+    ArtistaDTO artistaDTO = new ArtistaDTO(nome, foto, biografia, paisOrigem, genero);
+    Artista artista = new Artista(artistaDTO);
+
+    assertEquals(nome, artista.getNome());
+    assertArrayEquals(foto, artista.getFoto());
+    assertEquals(biografia, artista.getBiografia());
+    assertEquals(paisOrigem, artista.getPaisOrigem());
+    assertEquals(genero, artista.getGenero());
   }
 }
