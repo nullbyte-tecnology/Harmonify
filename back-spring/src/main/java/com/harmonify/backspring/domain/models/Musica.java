@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.sql.Date;
 import lombok.AllArgsConstructor;
@@ -27,8 +29,9 @@ public class Musica {
   @Column(length = 50, nullable = false)
   private String nome;
 
-  @Column(length = 50, nullable = false)
-  private String artista;
+  @ManyToOne
+  @JoinColumn(name = "id_artista", nullable = false)
+  private Artista artista;
 
   @Column(length = 20, nullable = false)
   private String genero;
@@ -41,9 +44,9 @@ public class Musica {
 
   private byte[] foto;
 
-  public Musica(MusicaDTO musicaDTO) {
+  public Musica(MusicaDTO musicaDTO, Artista artista) {
     this.nome = musicaDTO.nome();
-    this.artista = musicaDTO.artista();
+    this.artista = artista;
     this.genero = musicaDTO.generoMusical();
     this.duracaoSegundos = musicaDTO.duracao();
     this.lancamento = musicaDTO.lancamento();

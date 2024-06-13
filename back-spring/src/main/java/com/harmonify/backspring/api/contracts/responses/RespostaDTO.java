@@ -8,7 +8,7 @@ public record RespostaDTO(String nome, String artista, String generoMusical, Str
                           Date dataLancamento, String foto) {
 
   public RespostaDTO(Musica musica) {
-    this(musica.getNome(), musica.getArtista(), musica.getGenero(), musica.getDuracaoSegundos(),
+    this(musica.getNome(), musica.getArtista().getNome(), musica.getGenero(), musica.getDuracaoSegundos(),
         musica.getLancamento(), Base64.encodeBase64String(musica.getFoto()));
   }
 }
