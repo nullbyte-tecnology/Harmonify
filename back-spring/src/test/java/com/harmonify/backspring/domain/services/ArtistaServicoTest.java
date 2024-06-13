@@ -1,110 +1,150 @@
 package com.harmonify.backspring.domain.services;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.harmonify.backspring.api.contracts.requests.ArtistaDTO;
+import com.harmonify.backspring.domain.exception.RecursoNaoEncontradoExcecao;
 import com.harmonify.backspring.domain.models.Artista;
+import com.harmonify.backspring.domain.models.enums.GeneroMusical;
 import com.harmonify.backspring.infrastructure.repositories.ArtistaRepositorio;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 class ArtistaServicoTest {
 
   @Mock
-  private ArtistaRepositorio artistaRepositorioMock;
+  private ArtistaRepositorio artistaRepositorio;
 
   @InjectMocks
   private ArtistaServico artistaServico;
 
-  private List<Artista> artistasMock;
-
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     MockitoAnnotations.openMocks(this);
-
-    artistasMock = new ArrayList<>();
-    artistasMock.add(new Artista(
-        new ArtistaDTO("Artista 1", "Genero 1", "Nacionalidade 1", "Biografia", "Pais 1")));
-    artistasMock.add(new Artista(
-        new ArtistaDTO("Artista 2", "Genero 2", "Nacionalidade 2", "Biografia", "Pais 2")));
   }
 
   @Test
-  void testListarArtistas() {
-    when(artistaRepositorioMock.findAll()).thenReturn(artistasMock);
+  void testListarArtistasSemFiltro() {
+    Artista artista1 = new Artista(UUID.randomUUID(), "Artista1", new byte[]{1, 2, 3}, "Biografia1", "Brasil", GeneroMusical.ROCK);
+    Artista artista2 = new Artista(UUID.randomUUID(), "Artista2", new byte[]{4, 5, 6}, "Biografia2", "Argentina", GeneroMusical.JAZZ);
 
-    List<ArtistaDTO> artistasEncontrados = artistaServico.listarArtistas();
+    when(artistaRepositorio.findAll()).thenReturn(Arrays.asList(artista1, artista2));
 
-    assertThat(artistasEncontrados).isNotEmpty()
-        .hasSize(2);
+    List<ArtistaDTO> artistas = artistaServico.listarArtistas(null);
 
+    assertEquals(2, artistas.size());
+    assertEquals("Artista1", artistas.get(0).nome());
+    assertEquals("Artista2", artistas.get(1).nome());
+  }
+
+  @Test
+  void testListarArtistasComFiltro() {
+    Artista artista1 = new Artista(UUID.randomUUID(), "Artista1", new byte[]{1, 2, 3}, "Biografia1", "Brasil", GeneroMusical.ROCK);
+
+    when(artistaRepositorio.findAll(any(Specification.class))).thenReturn(Arrays.asList(artista1));
+
+    List<ArtistaDTO> artistas = artistaServico.listarArtistas("ROCK");
+
+    assertEquals(1, artistas.size());
+    assertEquals("Artista1", artistas.get(0).nome());
+  }
+
+  @Test
+  void testEncontrarArtista() {
+    UUID id = UUID.randomUUID();
+    Artista artista = new Artista(id, "Artista", new byte[]{1, 2, 3}, "Biografia", "Brasil", GeneroMusical.ROCK);
+
+    when(artistaRepositorio.findById(id)).thenReturn(Optional.of(artista));
+
+    ArtistaDTO artistaDTO = artistaServico.encontrarArtista(id);
+
+    assertNotNull(artistaDTO);
+    assertEquals("Artista", artistaDTO.nome());
+  }
+
+  @Test
+  void testEncontrarArtistaNaoExistente() {
+    UUID id = UUID.randomUUID();
+
+    when(artistaRepositorio.findById(id)).thenReturn(Optional.empty());
+
+    assertThrows(RecursoNaoEncontradoExcecao.class, () -> artistaServico.encontrarArtista(id));
   }
 
   @Test
   void testSalvarArtista() {
-    ArtistaDTO artistaDTO = new ArtistaDTO("Artista 1", "Genero 1", "Nacionalidade 1", "Biografia",
-        "Pais 1");
+    ArtistaDTO artistaDTO = new ArtistaDTO("Artista", new byte[]{1, 2, 3}, "Biografia", "Brasil", GeneroMusical.ROCK);
+    Artista artista = new Artista(artistaDTO);
+
+    when(artistaRepositorio.save(any(Artista.class))).thenReturn(artista);
 
     artistaServico.salvarArtista(artistaDTO);
 
-    verify(artistaRepositorioMock, times(1)).save(
-        any(Artista.class));  // Verifica se o método save foi chamado com um Artista
+    verify(artistaRepositorio, times(1)).save(any(Artista.class));
   }
 
   @Test
   void testAtualizarArtista() {
-    Long id = 1L;
-    ArtistaDTO artistaDTO = new ArtistaDTO("Artista Atualizado", "Genero Atualizado",
-        "Nacionalidade Atualizada", "Biografia Atualizada", "Pais Atualizado");
+    UUID id = UUID.randomUUID();
+    ArtistaDTO artistaDTO = new ArtistaDTO("Artista Atualizado", new byte[]{4, 5, 6}, "Biografia Atualizada", "Argentina", GeneroMusical.JAZZ);
+    Artista artista = new Artista(id, "Artista", new byte[]{1, 2, 3}, "Biografia", "Brasil", GeneroMusical.ROCK);
 
-    when(artistaRepositorioMock.findById(id)).thenReturn(
-        Optional.of(artistasMock.get(0)));  // Simula busca por ID
+    when(artistaRepositorio.findById(id)).thenReturn(Optional.of(artista));
+    when(artistaRepositorio.save(any(Artista.class))).thenReturn(artista);
 
     artistaServico.atualizarArtista(id, artistaDTO);
 
-    verify(artistaRepositorioMock, times(1)).save(
-        any(Artista.class));  // Verifica se o método save foi chamado
+    verify(artistaRepositorio, times(1)).findById(id);
+    verify(artistaRepositorio, times(1)).save(any(Artista.class));
+
+    assertEquals("Artista Atualizado", artista.getNome());
+    assertArrayEquals(new byte[]{4, 5, 6}, artista.getFoto());
+    assertEquals("Biografia Atualizada", artista.getBiografia());
+    assertEquals("Argentina", artista.getPaisOrigem());
+    assertEquals(GeneroMusical.JAZZ, artista.getGenero());
   }
 
   @Test
-  void testAtualizarArtista_ArtistaNaoEncontrado() {
-    Long id = 1L;
-    ArtistaDTO artistaDTO = new ArtistaDTO("Artista Atualizado", "Genero Atualizado",
-        "Nacionalidade Atualizada", "Biografia Atualizada", "Pais Atualizado");
+  void testAtualizarArtistaNaoExistente() {
+    UUID id = UUID.randomUUID();
+    ArtistaDTO artistaDTO = new ArtistaDTO("Artista Atualizado", new byte[]{4, 5, 6}, "Biografia Atualizada", "Argentina", GeneroMusical.JAZZ);
 
-    when(artistaRepositorioMock.findById(id)).thenReturn(
-        Optional.empty());  // Simula artista não encontrado
+    when(artistaRepositorio.findById(id)).thenReturn(Optional.empty());
 
-    try {
-      artistaServico.atualizarArtista(id, artistaDTO);
-    } catch (RuntimeException e) {
-      assertThat(e.getMessage()).isEqualTo("Artista não encontrado");
-    }
-
-    verify(artistaRepositorioMock, times(0)).save(
-        any(Artista.class));  // Verifica se o método save não foi chamado
+    assertThrows(RecursoNaoEncontradoExcecao.class, () -> artistaServico.atualizarArtista(id, artistaDTO));
   }
 
   @Test
-  void testListarArtistasPorGenero() {
-    String genero = "Genero 1";
-    when(artistaRepositorioMock.findAllByGenero(genero)).thenReturn(
-        artistasMock.subList(0, 1));  // Retorna apenas o primeiro artista
+  void testDeletarArtista() {
+    UUID id = UUID.randomUUID();
+    Artista artista = new Artista(id, "Artista", new byte[]{1, 2, 3}, "Biografia", "Brasil", GeneroMusical.ROCK);
 
-    List<ArtistaDTO> artistasEncontrados = artistaServico.listarArtistasPorGenero(genero);
+    when(artistaRepositorio.findById(id)).thenReturn(Optional.of(artista));
+    doNothing().when(artistaRepositorio).delete(any(Artista.class));
 
-    assertThat(artistasEncontrados).isNotEmpty()
-        .hasSize(1);
-    assertThat(artistasEncontrados.get(0).genero()).isEqualTo(genero);
+    artistaServico.deletarArtista(id);
+
+    verify(artistaRepositorio, times(1)).findById(id);
+    verify(artistaRepositorio, times(1)).delete(any(Artista.class));
+  }
+
+  @Test
+  void testDeletarArtistaNaoExistente() {
+    UUID id = UUID.randomUUID();
+
+    when(artistaRepositorio.findById(id)).thenReturn(Optional.empty());
+
+    assertThrows(RecursoNaoEncontradoExcecao.class, () -> artistaServico.deletarArtista(id));
   }
 }
