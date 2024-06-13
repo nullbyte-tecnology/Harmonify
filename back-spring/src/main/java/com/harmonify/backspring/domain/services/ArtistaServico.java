@@ -1,6 +1,8 @@
 package com.harmonify.backspring.domain.services;
 
 import com.harmonify.backspring.api.contracts.requests.ArtistaDTO;
+import com.harmonify.backspring.api.contracts.requests.FiltroDTO;
+import com.harmonify.backspring.api.contracts.responses.RespArtistaDTO;
 import com.harmonify.backspring.domain.exception.RecursoNaoEncontradoExcecao;
 import com.harmonify.backspring.domain.models.Artista;
 import com.harmonify.backspring.domain.specifications.ArtistaEspecificacao;
@@ -21,20 +23,20 @@ public class ArtistaServico {
 
   private final ArtistaRepositorio artistaRepositorio;
 
-  public List<ArtistaDTO> listarArtistas(String genero) {
-    if (genero != null) {
-      return listarArtistasComFiltros(genero);
+  public List<RespArtistaDTO> listarArtistas(FiltroDTO filtroDTO) {
+    if (filtroDTO != null) {
+      return listarArtistasComFiltros(filtroDTO);
     }
 
     List<Artista> artistas = artistaRepositorio.findAll();
 
-    return artistas.stream().map(ArtistaDTO::new).toList();
+    return artistas.stream().map(RespArtistaDTO::new).toList();
   }
 
-  public ArtistaDTO encontrarArtista(UUID id) {
+  public RespArtistaDTO encontrarArtista(UUID id) {
     Optional<Artista> artistaOpt = artistaRepositorio.findById(id);
 
-    return artistaOpt.map(ArtistaDTO::new)
+    return artistaOpt.map(RespArtistaDTO::new)
         .orElseThrow(() -> new RecursoNaoEncontradoExcecao(ARTISTA_NAO_ENCONTRADO));
   }
 
@@ -52,11 +54,12 @@ public class ArtistaServico {
     artistaRepositorio.save(artista);
   }
 
-  public List<ArtistaDTO> listarArtistasComFiltros(String genero) {
-    List<Artista> artistas = artistaRepositorio.findAll(Specification.where(
-        ArtistaEspecificacao.temGenero(genero)));
+  public List<RespArtistaDTO> listarArtistasComFiltros(FiltroDTO filtroDTO) {
+    List<Artista> artistas = artistaRepositorio.findAll(Specification
+        .where(ArtistaEspecificacao.temGenero(filtroDTO.genero())
+            .and(ArtistaEspecificacao.temPaisOrigem(filtroDTO.paisOrigem()))));
 
-    return artistas.stream().map(ArtistaDTO::new).toList();
+    return artistas.stream().map(RespArtistaDTO::new).toList();
   }
 
   public void  deletarArtista(UUID id) {
