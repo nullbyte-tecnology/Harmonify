@@ -1,12 +1,13 @@
 package com.harmonify.backspring.domain.models;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.harmonify.backspring.api.contracts.requests.ArtistaDTO;
 import com.harmonify.backspring.domain.models.enums.GeneroMusical;
-import org.junit.jupiter.api.Test;
-
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class ArtistaTest {
 
