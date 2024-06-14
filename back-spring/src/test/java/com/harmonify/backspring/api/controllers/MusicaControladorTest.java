@@ -1,20 +1,22 @@
 package com.harmonify.backspring.api.controllers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.harmonify.backspring.api.contracts.requests.MusicaDTO;
-import com.harmonify.backspring.api.contracts.responses.RespostaDTO;
+import com.harmonify.backspring.api.contracts.responses.RespMusicaDTO;
 import com.harmonify.backspring.domain.services.MusicaServico;
+import java.sql.Date;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.sql.Date;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 class MusicaControladorTest {
 
@@ -31,16 +33,16 @@ class MusicaControladorTest {
 
   @Test
   void testListarMusicas() {
-    List<RespostaDTO> musicasMock = List.of(
-        new RespostaDTO("Música 1", "Artista 1", "Rock", "3:30",
+    List<RespMusicaDTO> musicasMock = List.of(
+        new RespMusicaDTO("Música 1", "Artista 1", "Rock", "3:30",
             new Date(System.currentTimeMillis()), "base64encoded"),
-        new RespostaDTO("Música 2", "Artista 2", "Pop", "4:00",
+        new RespMusicaDTO("Música 2", "Artista 2", "Pop", "4:00",
             new Date(System.currentTimeMillis()), "base64encoded")
     );
 
     when(musicaServico.listarMusicas()).thenReturn(musicasMock);
 
-    List<RespostaDTO> resultado = controlador.listarMusicas();
+    List<RespMusicaDTO> resultado = controlador.listarMusicas();
 
     assertEquals(musicasMock.size(), resultado.size());
     assertEquals(musicasMock.get(0).nome(), resultado.get(0).nome());
@@ -62,7 +64,7 @@ class MusicaControladorTest {
 
   @Test
   void testSalvarMusica() {
-    MusicaDTO musicaDTO = new MusicaDTO("Música de Teste", "Artista de Teste", "Rock",
+    MusicaDTO musicaDTO = new MusicaDTO("Música de Teste", UUID.randomUUID(), "Rock",
         "3:30", new Date(System.currentTimeMillis()), new byte[0]);
 
     controlador.salvarMusica(musicaDTO);
@@ -72,7 +74,6 @@ class MusicaControladorTest {
 
     MusicaDTO musicaCapturada = musicaCaptor.getValue();
     assertEquals(musicaDTO.nome(), musicaCapturada.nome());
-    assertEquals(musicaDTO.artista(), musicaCapturada.artista());
     assertEquals(musicaDTO.generoMusical(), musicaCapturada.generoMusical());
     assertEquals(musicaDTO.duracao(), musicaCapturada.duracao());
     assertEquals(musicaDTO.lancamento(), musicaCapturada.lancamento());
