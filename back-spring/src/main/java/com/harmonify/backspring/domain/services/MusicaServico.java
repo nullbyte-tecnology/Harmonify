@@ -1,5 +1,6 @@
 package com.harmonify.backspring.domain.services;
 
+import com.harmonify.backspring.api.contracts.requests.FiltroMusicaDTO;
 import com.harmonify.backspring.api.contracts.requests.MusicaDTO;
 import com.harmonify.backspring.domain.exception.DadosInvalidosExcecao;
 import com.harmonify.backspring.domain.exception.RecursoNaoEncontradoExcecao;
@@ -7,12 +8,14 @@ import com.harmonify.backspring.domain.models.Artista;
 import com.harmonify.backspring.api.contracts.responses.RespMusicaDTO;
 import com.harmonify.backspring.domain.models.Musica;
 import com.harmonify.backspring.domain.models.enums.GeneroMusical;
+import com.harmonify.backspring.domain.specifications.MusicaEspecificacao;
 import com.harmonify.backspring.infrastructure.repositories.ArtistaRepositorio;
 import com.harmonify.backspring.infrastructure.repositories.MusicaRepositorio;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,12 +27,14 @@ public class MusicaServico {
   private final MusicaRepositorio musicaRepositorio;
   private final ArtistaRepositorio artistaRepositorio;
 
-  public List<RespMusicaDTO> listarMusicas() {
-    List<Musica> musicas = musicaRepositorio.findAll();
+  public List<RespMusicaDTO> listarMusicas(FiltroMusicaDTO filtroDTO) {
+    Specification<Musica> spec = Specification
+        .where(MusicaEspecificacao.temGenero(filtroDTO.genero()))
+        .and(MusicaEspecificacao.temArtista(filtroDTO.nomeArtista()));
 
-    return musicas.stream()
-        .map(RespMusicaDTO::new)
-        .toList();
+    List<Musica> musicas = musicaRepositorio.findAll(spec);
+
+    return musicas.stream().map(RespMusicaDTO::new).toList();
   }
 
   public void salvarMusica(MusicaDTO musicaDTO) {
@@ -46,8 +51,7 @@ public class MusicaServico {
   }
 
   public Boolean validarMusica(MusicaDTO musicaDTO) {
-    return GENEROS_MUSICAIS_VALIDOS.stream()
-        .anyMatch(generoMusical -> generoMusical.getValor().equals(musicaDTO.generoMusical()));
+    return GENEROS_MUSICAIS_VALIDOS.stream().anyMatch(g -> g.equals(musicaDTO.generoMusical()));
   }
 
 }

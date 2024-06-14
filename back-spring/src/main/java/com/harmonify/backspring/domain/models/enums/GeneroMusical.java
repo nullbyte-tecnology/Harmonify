@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum GeneroMusical {
   COUNTRY("Country"),
   DANCE("Dance"),
+  ELECTROPOP("Electropop"),
   ELETRONICA("Eletrônica"),
   FORRO("Forró"),
   HIP_HOP("Hip Hop"),
@@ -13,7 +14,9 @@ public enum GeneroMusical {
   JAZZ("Jazz"),
   POP("Pop"),
   ROCK("Rock"),
-  R_B("R&B");
+  ROCK_ALT("Rock Alternativo"),
+  R_B("R&B"),
+  SOUL("Soul");
 
   private final String valor;
 
