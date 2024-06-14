@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.harmonify.backspring.api.contracts.requests.MusicaDTO;
-import com.harmonify.backspring.api.contracts.responses.RespostaDTO;
+import com.harmonify.backspring.api.contracts.responses.RespMusicaDTO;
 import com.harmonify.backspring.domain.models.Musica;
 import com.harmonify.backspring.infrastructure.repositories.MusicaRepositorio;
 import java.sql.Date;
@@ -51,7 +51,7 @@ class MusicaServicoTest {
 
     when(musicaRepositorio.findAll()).thenReturn(listaMusicas);
 
-    List<RespostaDTO> resposta = musicaServico.listarMusicas();
+    List<RespMusicaDTO> resposta = musicaServico.listarMusicas();
 
     assertNotNull(resposta);
     assertEquals(2, resposta.size());

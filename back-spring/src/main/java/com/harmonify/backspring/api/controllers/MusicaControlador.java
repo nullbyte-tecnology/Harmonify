@@ -1,7 +1,7 @@
 package com.harmonify.backspring.api.controllers;
 
 import com.harmonify.backspring.api.contracts.requests.MusicaDTO;
-import com.harmonify.backspring.api.contracts.responses.RespostaDTO;
+import com.harmonify.backspring.api.contracts.responses.RespMusicaDTO;
 import com.harmonify.backspring.domain.services.MusicaServico;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ public class MusicaControlador {
   }
 
   @GetMapping
-  public List<RespostaDTO> listarMusicas() {
+  public List<RespMusicaDTO> listarMusicas() {
     return musicaServico.listarMusicas();
   }
 

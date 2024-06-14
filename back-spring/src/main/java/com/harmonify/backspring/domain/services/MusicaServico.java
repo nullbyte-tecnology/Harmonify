@@ -1,10 +1,10 @@
 package com.harmonify.backspring.domain.services;
 
 import com.harmonify.backspring.api.contracts.requests.MusicaDTO;
-import com.harmonify.backspring.api.contracts.responses.RespostaDTO;
 import com.harmonify.backspring.domain.exception.DadosInvalidosExcecao;
 import com.harmonify.backspring.domain.exception.RecursoNaoEncontradoExcecao;
 import com.harmonify.backspring.domain.models.Artista;
+import com.harmonify.backspring.api.contracts.responses.RespMusicaDTO;
 import com.harmonify.backspring.domain.models.Musica;
 import com.harmonify.backspring.domain.models.enums.GeneroMusical;
 import com.harmonify.backspring.infrastructure.repositories.ArtistaRepositorio;
@@ -24,11 +24,11 @@ public class MusicaServico {
   private final MusicaRepositorio musicaRepositorio;
   private final ArtistaRepositorio artistaRepositorio;
 
-  public List<RespostaDTO> listarMusicas() {
+  public List<RespMusicaDTO> listarMusicas() {
     List<Musica> musicas = musicaRepositorio.findAll();
 
     return musicas.stream()
-        .map(RespostaDTO::new)
+        .map(RespMusicaDTO::new)
         .toList();
   }
 
