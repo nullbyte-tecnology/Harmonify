@@ -33,14 +33,19 @@ public class AlbumServico {
         }
     }
 
-    public List<Musica> mapearMusicas(List<MusicaAlbumDTO> musicaAlbumDTOS){
+    private List<Musica> mapearMusicas(List<MusicaAlbumDTO> musicaAlbumDTOS){
         List<Musica> musicas = new ArrayList<>();
 
         for (MusicaAlbumDTO musicaAlbumDTO : musicaAlbumDTOS) {
-            Optional<Musica> musicaOptional = musicaRepositorio.findByNomeAndArtistaId(musicaAlbumDTO.nome(), musicaAlbumDTO.artista());
-            musicaOptional.ifPresent(musicas::add);
-        }
+            Optional<Musica> musicaOptional = musicaRepositorio.findByNomeAndArtistaId(musicaAlbumDTO.nome(), musicaAlbumDTO.idArtista());
 
+            if (musicaOptional.isPresent()) {
+                musicas.add(musicaOptional.get());
+            } else {
+                throw new RuntimeException("Música não encontrada para nome: " + musicaAlbumDTO.nome() + " e idArtista: " + musicaAlbumDTO.idArtista());
+            }
+        }
         return musicas;
     }
+
 }
