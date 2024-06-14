@@ -1,12 +1,12 @@
 package com.harmonify.backspring.api.controllers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.harmonify.backspring.api.contracts.responses.ErroDTO;
 import com.harmonify.backspring.domain.exception.RecursoNaoEncontradoExcecao;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ExcecaoControladorTest {
 
