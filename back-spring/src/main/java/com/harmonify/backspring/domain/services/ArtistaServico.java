@@ -50,11 +50,11 @@ public class ArtistaServico {
         .orElseThrow(() -> new RecursoNaoEncontradoExcecao(ARTISTA_NAO_ENCONTRADO));
 
     BeanUtils.copyProperties(artistaDTO, artista);
-    System.out.println(artista.getBiografia());
+
     artistaRepositorio.save(artista);
   }
 
-  public void  deletarArtista(UUID id) {
+  public void deletarArtista(UUID id) {
     Artista artista = artistaRepositorio.findById(id)
         .orElseThrow(() -> new RecursoNaoEncontradoExcecao(ARTISTA_NAO_ENCONTRADO));
 
