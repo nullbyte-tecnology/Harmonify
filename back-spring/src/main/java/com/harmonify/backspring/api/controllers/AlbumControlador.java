@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -28,6 +29,12 @@ public class AlbumControlador {
     @ResponseStatus(HttpStatus.OK)
     public RespAlbumDTO detalharAlbum(@PathVariable UUID id){
         return albumServico.detalharAlbum(id);
+    }
+
+    @GetMapping("/artista/{artistaId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<RespAlbumDTO> buscarAlbunsPorArtista(@PathVariable UUID artistaId){
+        return albumServico.buscarAlbunsPorArtista(artistaId);
     }
 
     @PostMapping("/{id}/adicionar-musica")
