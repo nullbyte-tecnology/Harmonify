@@ -97,6 +97,14 @@ public class AlbumServico {
         }
     }
 
+    public void deletarAlbum(UUID id){
+        Optional<Album> album = albumRepositorio.findById(id);
+
+        if(album.isEmpty()) throw new RuntimeException("Álbum não encontrado.");
+
+        album.get().getMusicas().clear();
+        albumRepositorio.delete(album.get());
+    }
 
     private List<Musica> mapearMusicas(List<MusicaAlbumDTO> musicaAlbumDTOS){
         List<Musica> musicas = new ArrayList<>();

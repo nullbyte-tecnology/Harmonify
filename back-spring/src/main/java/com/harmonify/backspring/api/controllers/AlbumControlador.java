@@ -41,4 +41,10 @@ public class AlbumControlador {
         albumServico.removerMusicaNoAlbum(id, nomeMusica);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletarAlbum(@PathVariable UUID id){
+        albumServico.deletarAlbum(id);
+    }
+
 }
