@@ -1,6 +1,7 @@
 package com.harmonify.backspring.api.controllers;
 
 import com.harmonify.backspring.api.contracts.requests.AlbumDTO;
+import com.harmonify.backspring.api.contracts.requests.MusicaAlbumDTO;
 import com.harmonify.backspring.api.contracts.responses.RespAlbumDTO;
 import com.harmonify.backspring.domain.services.AlbumServico;
 import lombok.RequiredArgsConstructor;
@@ -27,4 +28,12 @@ public class AlbumControlador {
     public RespAlbumDTO detalharAlbum(@PathVariable UUID id){
         return albumServico.detalharAlbum(id);
     }
+
+    @PostMapping("/{id}/adicionar-musica")
+    @ResponseStatus(HttpStatus.OK)
+    public void adicionarMusicaNoAlbum(@PathVariable UUID id, @RequestBody MusicaAlbumDTO musicaAlbumDTO){
+        albumServico.adicionarMusicaNoAlbum(id, musicaAlbumDTO);
+    }
+
+
 }
