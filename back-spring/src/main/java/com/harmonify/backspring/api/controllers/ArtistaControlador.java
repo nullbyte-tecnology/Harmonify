@@ -1,7 +1,7 @@
 package com.harmonify.backspring.api.controllers;
 
 import com.harmonify.backspring.api.contracts.requests.ArtistaDTO;
-import com.harmonify.backspring.api.contracts.requests.FiltroDTO;
+import com.harmonify.backspring.api.contracts.requests.FiltroArtistaDTO;
 import com.harmonify.backspring.api.contracts.responses.RespArtistaDTO;
 import com.harmonify.backspring.domain.services.ArtistaServico;
 import java.util.List;
@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/artista")
+@RequestMapping("api/artistas")
 @RequiredArgsConstructor
 public class ArtistaControlador {
 
   private final ArtistaServico artistaServico;
 
   @GetMapping
-  public ResponseEntity<List<RespArtistaDTO>> listarArtistas(FiltroDTO filtroDTO) {
+  public ResponseEntity<List<RespArtistaDTO>> listarArtistas(FiltroArtistaDTO filtroDTO) {
     List<RespArtistaDTO> artistas = artistaServico.listarArtistas(filtroDTO);
 
     return ResponseEntity.status(HttpStatus.OK).body(artistas);

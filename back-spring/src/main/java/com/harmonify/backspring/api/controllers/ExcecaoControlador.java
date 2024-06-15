@@ -18,7 +18,7 @@ public class ExcecaoControlador {
 
   @ExceptionHandler(DadosInvalidosExcecao.class)
   public ResponseEntity<ErroDTO> dadosInvalidosExcecao(DadosInvalidosExcecao ex) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErroDTO(ex.getMessage()));
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErroDTO(ex.getMessage()));
   }
 
 }
