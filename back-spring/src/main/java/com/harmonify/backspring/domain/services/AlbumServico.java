@@ -2,6 +2,8 @@ package com.harmonify.backspring.domain.services;
 
 import com.harmonify.backspring.api.contracts.requests.AlbumDTO;
 import com.harmonify.backspring.api.contracts.requests.MusicaAlbumDTO;
+import com.harmonify.backspring.api.contracts.responses.RespAlbumDTO;
+import com.harmonify.backspring.api.contracts.responses.RespMusicaAlbumDTO;
 import com.harmonify.backspring.domain.models.Album;
 import com.harmonify.backspring.domain.models.Artista;
 import com.harmonify.backspring.domain.models.Musica;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +37,26 @@ public class AlbumServico {
         }
     }
 
+    public RespAlbumDTO detalharAlbum(UUID id){
+        Optional<Album> album = albumRepositorio.findById(id);
+
+        if(album.isPresent()){
+            List<RespMusicaAlbumDTO> musicaAlbumDTOS = album.get().getMusicas().stream()
+                    .map(this::mapearParaRespMusicaAlbumDTO)
+                    .toList();
+
+            return new RespAlbumDTO(
+                    album.get().getNome(),
+                    album.get().getArtista().getNome(),
+                    musicaAlbumDTOS,
+                    album.get().getDescricao(),
+                    album.get().getDataLancamento()
+            );
+        } else {
+            throw new RuntimeException("Álbum não encontrado");
+        }
+    }
+
     private List<Musica> mapearMusicas(List<MusicaAlbumDTO> musicaAlbumDTOS){
         List<Musica> musicas = new ArrayList<>();
 
@@ -46,6 +70,15 @@ public class AlbumServico {
             }
         }
         return musicas;
+    }
+
+    private RespMusicaAlbumDTO mapearParaRespMusicaAlbumDTO(Musica musica) {
+        return new RespMusicaAlbumDTO(
+                musica.getNome(),
+                musica.getGenero(),
+                musica.getDuracaoSegundos(),
+                musica.getLancamento(),
+                musica.getFoto() );
     }
 
 }
