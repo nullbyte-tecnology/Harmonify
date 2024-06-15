@@ -30,7 +30,7 @@ public class AlbumServico {
 
     public void salvarAlbum(AlbumDTO albumDTO){
         Optional<Artista> artista = artistaRepositorio.findById(albumDTO.artistaId());
-        List<Musica> musicas = mapearMusicas(albumDTO.musicas());
+        List<Musica> musicas = mapearMusicas(albumDTO.musicas(), albumDTO.artistaId());
 
         if(artista.isPresent()){
             Album album = new Album(albumDTO, artista.get(), musicas);
@@ -156,8 +156,8 @@ public class AlbumServico {
     private RespMusicaAlbumDTO mapearParaRespMusicaAlbumDTO(Musica musica) {
         return new RespMusicaAlbumDTO(
                 musica.getNome(),
-                musica.getGenero(),
-                musica.getDuracaoSegundos(),
+                musica.getGenero().getValor(),
+                musica.getDuracao(),
                 musica.getLancamento(),
                 musica.getFoto() );
     }
