@@ -1,5 +1,6 @@
 package com.harmonify.backspring.domain.services;
 
+import com.harmonify.backspring.api.contracts.requests.AlbumAtualizacaoDTO;
 import com.harmonify.backspring.api.contracts.requests.AlbumDTO;
 import com.harmonify.backspring.api.contracts.requests.MusicaAlbumDTO;
 import com.harmonify.backspring.api.contracts.responses.RespAlbumDTO;
@@ -95,6 +96,19 @@ public class AlbumServico {
         } else {
             throw new RuntimeException("Música não encontrada no álbum.");
         }
+    }
+
+    public void atualizarAlbum(UUID albumId, AlbumAtualizacaoDTO albumAtualizacaoDTO){
+        Optional<Album> albumOptional = albumRepositorio.findById(albumId);
+
+        if(albumOptional.isEmpty()) throw new RuntimeException("Álbum não encontrado.");
+
+        Album album = albumOptional.get();
+        album.setNome(albumAtualizacaoDTO.nome());
+        album.setDescricao(albumAtualizacaoDTO.descricao());
+        album.setDataLancamento(albumAtualizacaoDTO.dataLancamento());
+
+        albumRepositorio.save(album);
     }
 
     public void deletarAlbum(UUID id){

@@ -1,5 +1,6 @@
 package com.harmonify.backspring.api.controllers;
 
+import com.harmonify.backspring.api.contracts.requests.AlbumAtualizacaoDTO;
 import com.harmonify.backspring.api.contracts.requests.AlbumDTO;
 import com.harmonify.backspring.api.contracts.requests.MusicaAlbumDTO;
 import com.harmonify.backspring.api.contracts.responses.RespAlbumDTO;
@@ -39,6 +40,12 @@ public class AlbumControlador {
     @ResponseStatus(HttpStatus.OK)
     public void removerMusicaDoAlbum(@PathVariable UUID id, @RequestParam String nomeMusica){
         albumServico.removerMusicaNoAlbum(id, nomeMusica);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void atualizarAlbum(@PathVariable UUID id, @RequestBody AlbumAtualizacaoDTO albumAtualizacaoDTO){
+        albumServico.atualizarAlbum(id, albumAtualizacaoDTO);
     }
 
     @DeleteMapping("/{id}")
