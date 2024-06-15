@@ -35,5 +35,10 @@ public class AlbumControlador {
         albumServico.adicionarMusicaNoAlbum(id, musicaAlbumDTO);
     }
 
+    @PostMapping("/{id}/remover-musica")
+    @ResponseStatus(HttpStatus.OK)
+    public void removerMusicaDoAlbum(@PathVariable UUID id, @RequestParam String nomeMusica){
+        albumServico.removerMusicaNoAlbum(id, nomeMusica);
+    }
 
 }

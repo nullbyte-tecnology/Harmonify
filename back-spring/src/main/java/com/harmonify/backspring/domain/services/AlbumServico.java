@@ -77,6 +77,27 @@ public class AlbumServico {
         }
     }
 
+    public void removerMusicaNoAlbum(UUID albumId, String nomeMusica){
+        Optional<Album> albumOptional = albumRepositorio.findById(albumId);
+
+        if(albumOptional.isEmpty()) throw new RuntimeException("Álbum não encontrado.");
+
+        Album album = albumOptional.get();
+
+        Optional<Musica> musicaOptional = album.getMusicas().stream()
+                .filter(musica -> musica.getNome().equals(nomeMusica))
+                .findFirst();
+
+        if (musicaOptional.isPresent()) {
+            Musica musicaRemover = musicaOptional.get();
+            album.getMusicas().remove(musicaRemover);
+            albumRepositorio.save(album);
+        } else {
+            throw new RuntimeException("Música não encontrada no álbum.");
+        }
+    }
+
+
     private List<Musica> mapearMusicas(List<MusicaAlbumDTO> musicaAlbumDTOS){
         List<Musica> musicas = new ArrayList<>();
 
