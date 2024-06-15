@@ -133,14 +133,19 @@ public class AlbumServico {
         albumRepositorio.delete(album.get());
     }
 
-    private List<Musica> mapearMusicas(List<MusicaAlbumDTO> musicaAlbumDTOS){
+    private List<Musica> mapearMusicas(List<MusicaAlbumDTO> musicaAlbumDTOS, UUID artistaId) {
         List<Musica> musicas = new ArrayList<>();
 
         for (MusicaAlbumDTO musicaAlbumDTO : musicaAlbumDTOS) {
             Optional<Musica> musicaOptional = musicaRepositorio.findByNomeAndArtistaId(musicaAlbumDTO.nome(), musicaAlbumDTO.idArtista());
 
             if (musicaOptional.isPresent()) {
-                musicas.add(musicaOptional.get());
+                Musica musica = musicaOptional.get();
+
+                if (!musica.getArtista().getId().equals(artistaId)) {
+                    throw new RuntimeException("A música '" + musica.getNome() + "' não pertence ao artista do álbum.");
+                }
+                musicas.add(musica);
             } else {
                 throw new RuntimeException("Música não encontrada para nome: " + musicaAlbumDTO.nome() + " e idArtista: " + musicaAlbumDTO.idArtista());
             }
