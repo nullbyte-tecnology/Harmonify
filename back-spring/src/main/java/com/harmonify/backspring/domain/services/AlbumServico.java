@@ -57,6 +57,26 @@ public class AlbumServico {
         }
     }
 
+    public void adicionarMusicaNoAlbum(UUID albumId, MusicaAlbumDTO musicaAlbumDTO){
+        Optional<Album> albumOptional = albumRepositorio.findById(albumId);
+        Optional<Musica> musicaOptional = musicaRepositorio.findByNomeAndArtistaId(musicaAlbumDTO.nome(), musicaAlbumDTO.idArtista());
+
+        if(albumOptional.isEmpty()) throw new RuntimeException("Álbum não encontrado.");
+        if(musicaOptional.isEmpty()) throw new RuntimeException("Música não encontrado.");
+
+        Album album = albumOptional.get();
+        Musica musica = musicaOptional.get();
+
+        if (!album.getArtista().getId().equals(musica.getArtista().getId())) throw new RuntimeException("O artista da música não corresponde ao artista do álbum.");
+
+        if(!album.getMusicas().contains(musica)){
+            album.getMusicas().add(musica);
+            albumRepositorio.save(album);
+        } else {
+            throw new RuntimeException("Essa música já foi adicionada no álbum.");
+        }
+    }
+
     private List<Musica> mapearMusicas(List<MusicaAlbumDTO> musicaAlbumDTOS){
         List<Musica> musicas = new ArrayList<>();
 
