@@ -1,5 +1,6 @@
 package com.harmonify.backspring.domain.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.harmonify.backspring.api.contracts.requests.AlbumDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,7 +32,8 @@ public class Album {
     @JoinColumn(name = "id_artista", nullable = false)
     private Artista artista;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "album")
+    @JsonManagedReference
     private List<Musica> musicas;
 
     @Column(length = 100, nullable = false)

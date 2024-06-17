@@ -1,5 +1,6 @@
 package com.harmonify.backspring.domain.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.harmonify.backspring.api.contracts.requests.MusicaDTO;
 import com.harmonify.backspring.domain.models.enums.GeneroMusical;
 import jakarta.persistence.Column;
@@ -14,14 +15,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.sql.Date;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Getter
 @Table(name = "Musica")
 public class Musica {
 
@@ -48,6 +47,11 @@ public class Musica {
   private Date lancamento;
 
   private byte[] foto;
+
+  @ManyToOne
+  @JoinColumn(name = "id_album")
+  @JsonBackReference
+  private Album album;
 
   public Musica(MusicaDTO musicaDTO, Artista artista) {
     this.nome = musicaDTO.nome();
