@@ -4,7 +4,7 @@ import com.harmonify.backspring.api.contracts.requests.AlbumAtualizacaoDTO;
 import com.harmonify.backspring.api.contracts.requests.AlbumDTO;
 import com.harmonify.backspring.api.contracts.requests.MusicaAlbumDTO;
 import com.harmonify.backspring.api.contracts.responses.RespAlbumDTO;
-import com.harmonify.backspring.api.contracts.responses.RespMusicaAlbumDTO;
+import com.harmonify.backspring.api.contracts.responses.RespMusicaDTO;
 import com.harmonify.backspring.domain.exception.MusicaInvalidaExcecao;
 import com.harmonify.backspring.domain.exception.RecursoNaoEncontradoExcecao;
 import com.harmonify.backspring.domain.models.Album;
@@ -35,9 +35,6 @@ public class AlbumServico {
 
     public void salvarAlbum(AlbumDTO albumDTO){
         Optional<Artista> artista = artistaRepositorio.findById(albumDTO.artistaId());
-        // Porque não passar o ID da música?
-        // Existe tb duas estratégias: criar a musica junto com o album
-        // ou primerio as músicas, depois o album e as adiciona as músicas.
 
         if(artista.isPresent()) {
             Album album = new Album(albumDTO, artista.get(), null);
@@ -54,8 +51,8 @@ public class AlbumServico {
         Optional<Album> album = albumRepositorio.findById(id);
 
         if(album.isPresent()){
-            List<RespMusicaAlbumDTO> musicaAlbumDTOS = album.get().getMusicas().stream()
-                    .map(this::mapearParaRespMusicaAlbumDTO)
+            List<RespMusicaDTO> musicaAlbumDTOS = album.get().getMusicas().stream()
+                    .map(RespMusicaDTO::new)
                     .toList();
 
             return new RespAlbumDTO(
@@ -121,7 +118,6 @@ public class AlbumServico {
                 .map(this::mapearParaRespAlbumDTO).toList();
     }
 
-
     public void atualizarAlbum(UUID albumId, AlbumAtualizacaoDTO albumAtualizacaoDTO){
         Optional<Album> albumOptional = albumRepositorio.findById(albumId);
 
@@ -165,27 +161,12 @@ public class AlbumServico {
         return musicas;
     }
 
-    private RespMusicaAlbumDTO mapearParaRespMusicaAlbumDTO(Musica musica) {
-        return new RespMusicaAlbumDTO(
-                musica.getNome(),
-                musica.getGenero().getValor(),
-                musica.getDuracao(),
-                musica.getLancamento(),
-                musica.getFoto() );
-    }
-
     private RespAlbumDTO mapearParaRespAlbumDTO(Album album) {
-        List<RespMusicaAlbumDTO> musicaAlbumDTOS = album.getMusicas().stream()
-                .map(this::mapearParaRespMusicaAlbumDTO)
+        List<RespMusicaDTO> musicaAlbumDTOS = album.getMusicas().stream()
+                .map(RespMusicaDTO::new)
                 .toList();
 
-        return new RespAlbumDTO(
-                album.getNome(),
-                album.getArtista().getNome(),
-                musicaAlbumDTOS,
-                album.getDescricao(),
-                album.getDataLancamento()
-        );
+        return new RespAlbumDTO(album, musicaAlbumDTOS);
     }
 
 }
