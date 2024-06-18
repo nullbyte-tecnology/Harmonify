@@ -12,12 +12,10 @@ import com.harmonify.backspring.domain.models.Album;
 import com.harmonify.backspring.domain.models.Artista;
 import com.harmonify.backspring.domain.models.Musica;
 import com.harmonify.backspring.domain.specifications.AlbumEspecificacao;
-import com.harmonify.backspring.domain.specifications.ArtistaEspecificacao;
 import com.harmonify.backspring.infrastructure.repositories.AlbumRepositorio;
 import com.harmonify.backspring.infrastructure.repositories.ArtistaRepositorio;
 import com.harmonify.backspring.infrastructure.repositories.MusicaRepositorio;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -126,6 +124,15 @@ public class AlbumServico {
         }
     }
 
+    public List<RespAlbumDTO> buscarAlbunsPorArtista(UUID artistaId){
+        List<Album> albuns = albumRepositorio.findByArtistaId(artistaId);
+
+        if (albuns.isEmpty()) throw new RecursoNaoEncontradoExcecao( "Nenhum álbum encontrado para o artista com ID: " + artistaId);
+
+        return albuns.stream()
+                .map(this::mapearParaRespAlbumDTO).toList();
+    }
+
     public void atualizarAlbum(UUID albumId, AlbumAtualizacaoDTO albumAtualizacaoDTO){
         Optional<Album> albumOptional = albumRepositorio.findById(albumId);
 
@@ -170,11 +177,11 @@ public class AlbumServico {
     }
 
     private RespAlbumDTO mapearParaRespAlbumDTO(Album album) {
-        List<RespMusicaDTO> musicaAlbumDTOS = album.getMusicas().stream()
+        List<RespMusicaDTO> musicas = album.getMusicas().stream()
                 .map(RespMusicaDTO::new)
                 .toList();
 
-        return new RespAlbumDTO(album, musicaAlbumDTOS);
+        return new RespAlbumDTO(album, musicas);
     }
 
 }
