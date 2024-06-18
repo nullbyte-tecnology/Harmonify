@@ -2,6 +2,7 @@ package com.harmonify.backspring.api.controllers;
 
 import com.harmonify.backspring.api.contracts.requests.AlbumAtualizacaoDTO;
 import com.harmonify.backspring.api.contracts.requests.AlbumDTO;
+import com.harmonify.backspring.api.contracts.requests.FiltroAlbumDTO;
 import com.harmonify.backspring.api.contracts.requests.MusicaAlbumDTO;
 import com.harmonify.backspring.api.contracts.responses.RespAlbumDTO;
 import com.harmonify.backspring.domain.services.AlbumServico;
@@ -19,6 +20,12 @@ public class AlbumControlador {
 
     private final AlbumServico albumServico;
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<RespAlbumDTO> listarAlbuns(FiltroAlbumDTO filtroAlbumDTO){
+        return albumServico.listarAlbuns(filtroAlbumDTO);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void salvarAlbum(@RequestBody AlbumDTO albumDTO){
@@ -29,12 +36,6 @@ public class AlbumControlador {
     @ResponseStatus(HttpStatus.OK)
     public RespAlbumDTO detalharAlbum(@PathVariable UUID id){
         return albumServico.detalharAlbum(id);
-    }
-
-    @GetMapping("/artista/{artistaId}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<RespAlbumDTO> buscarAlbunsPorArtista(@PathVariable UUID artistaId){
-        return albumServico.buscarAlbunsPorArtista(artistaId);
     }
 
     @PostMapping("/{id}/adicionar-musica")
