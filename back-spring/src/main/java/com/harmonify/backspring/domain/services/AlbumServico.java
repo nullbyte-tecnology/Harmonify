@@ -5,6 +5,8 @@ import com.harmonify.backspring.api.contracts.requests.AlbumDTO;
 import com.harmonify.backspring.api.contracts.requests.MusicaAlbumDTO;
 import com.harmonify.backspring.api.contracts.responses.RespAlbumDTO;
 import com.harmonify.backspring.api.contracts.responses.RespMusicaAlbumDTO;
+import com.harmonify.backspring.domain.exception.MusicaInvalidaExcecao;
+import com.harmonify.backspring.domain.exception.RecursoNaoEncontradoExcecao;
 import com.harmonify.backspring.domain.models.Album;
 import com.harmonify.backspring.domain.models.Artista;
 import com.harmonify.backspring.domain.models.Musica;
@@ -23,6 +25,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AlbumServico {
 
+    private static final String ALBUM_NAO_ENCONTRADO = "Álbum não encontrado";
+    private static final String MUSICA_NAO_ENCONTRADA = "Música não encontrada.";
+    private static final String ARTISTA_NAO_ENCONTRADA = "Artista não encontrado.";
+
     private final AlbumRepositorio albumRepositorio;
     private final MusicaRepositorio musicaRepositorio;
     private final ArtistaRepositorio artistaRepositorio;
@@ -33,15 +39,14 @@ public class AlbumServico {
         // Existe tb duas estratégias: criar a musica junto com o album
         // ou primerio as músicas, depois o album e as adiciona as músicas.
 
-        // Faltou exceção caso o artista não seja encontrado.
-        // RecursoNaoEncontradoException + codigo HTTP
-
         if(artista.isPresent()) {
             Album album = new Album(albumDTO, artista.get(), null);
             List<Musica> musicas = mapearMusicas(albumDTO.musicas(), albumDTO.artistaId(), album);
             album.setMusicas(musicas);
 
             albumRepositorio.save(album);
+        } else {
+            throw new RecursoNaoEncontradoExcecao(ARTISTA_NAO_ENCONTRADA);
         }
     }
 
@@ -61,8 +66,7 @@ public class AlbumServico {
                     album.get().getDataLancamento()
             );
         } else {
-            // RecursoNaoEncontradoException + codigo HTTP
-            throw new RuntimeException("Álbum não encontrado");
+            throw new RecursoNaoEncontradoExcecao(ALBUM_NAO_ENCONTRADO);
         }
     }
 
@@ -70,29 +74,27 @@ public class AlbumServico {
         Optional<Album> albumOptional = albumRepositorio.findById(albumId);
         Optional<Musica> musicaOptional = musicaRepositorio.findByNomeAndArtistaId(musicaAlbumDTO.nome(), musicaAlbumDTO.idArtista());
 
-        // RecursoNaoEncontradoException + codigo HTTP
-        if(albumOptional.isEmpty()) throw new RuntimeException("Álbum não encontrado.");
-        if(musicaOptional.isEmpty()) throw new RuntimeException("Música não encontrado.");
+        if(albumOptional.isEmpty()) throw new RecursoNaoEncontradoExcecao(ALBUM_NAO_ENCONTRADO);
+        if(musicaOptional.isEmpty()) throw new RecursoNaoEncontradoExcecao(MUSICA_NAO_ENCONTRADA);
 
         Album album = albumOptional.get();
         Musica musica = musicaOptional.get();
 
-        if (!album.getArtista().getId().equals(musica.getArtista().getId())) throw new RuntimeException("O artista da música não corresponde ao artista do álbum.");
+        if (!album.getArtista().getId().equals(musica.getArtista().getId())) throw new MusicaInvalidaExcecao("O artista da música não corresponde ao artista do álbum.");
 
         if(!album.getMusicas().contains(musica)){
             musica.setAlbum(album);
             album.getMusicas().add(musica);
             albumRepositorio.save(album);
         } else {
-            throw new RuntimeException("Essa música já foi adicionada no álbum.");
+            throw new MusicaInvalidaExcecao("Essa música já foi adicionada no álbum.");
         }
     }
 
     public void removerMusicaNoAlbum(UUID albumId, String nomeMusica){
         Optional<Album> albumOptional = albumRepositorio.findById(albumId);
 
-        // RecursoNaoEncontradoException + codigo HTTP
-        if(albumOptional.isEmpty()) throw new RuntimeException("Álbum não encontrado.");
+        if(albumOptional.isEmpty()) throw new RecursoNaoEncontradoExcecao(ALBUM_NAO_ENCONTRADO);
 
         Album album = albumOptional.get();
 
@@ -106,17 +108,14 @@ public class AlbumServico {
             album.getMusicas().remove(musicaRemover);
             albumRepositorio.save(album);
         } else {
-            throw new RuntimeException("Música não encontrada no álbum.");
+            throw new RecursoNaoEncontradoExcecao("Música não encontrada no álbum.");
         }
     }
 
     public List<RespAlbumDTO> buscarAlbunsPorArtista(UUID artistaId){
         List<Album> albuns = albumRepositorio.findByArtistaId(artistaId);
 
-        // RecursoNaoEncontradoException + codigo HTTP.
-        if (albuns.isEmpty()) {
-            throw new RuntimeException("Nenhum álbum encontrado para o artista com ID: " + artistaId);
-        }
+        if (albuns.isEmpty()) throw new RecursoNaoEncontradoExcecao( "Nenhum álbum encontrado para o artista com ID: " + artistaId);
 
         return albuns.stream()
                 .map(this::mapearParaRespAlbumDTO).toList();
@@ -126,8 +125,7 @@ public class AlbumServico {
     public void atualizarAlbum(UUID albumId, AlbumAtualizacaoDTO albumAtualizacaoDTO){
         Optional<Album> albumOptional = albumRepositorio.findById(albumId);
 
-        // RecursoNaoEncontradoException + codigo HTTP
-        if(albumOptional.isEmpty()) throw new RuntimeException("Álbum não encontrado.");
+        if(albumOptional.isEmpty()) throw new RecursoNaoEncontradoExcecao(ALBUM_NAO_ENCONTRADO);
 
         Album album = albumOptional.get();
         album.setNome(albumAtualizacaoDTO.nome());
@@ -140,8 +138,7 @@ public class AlbumServico {
     public void deletarAlbum(UUID id){
         Optional<Album> album = albumRepositorio.findById(id);
 
-        // RecursoNaoEncontradoException + codigo HTTP
-        if(album.isEmpty()) throw new RuntimeException("Álbum não encontrado.");
+        if(album.isEmpty()) throw new RecursoNaoEncontradoExcecao(ALBUM_NAO_ENCONTRADO);
 
         album.get().getMusicas().clear();
         albumRepositorio.delete(album.get());
@@ -157,12 +154,12 @@ public class AlbumServico {
                 Musica musica = musicaOptional.get();
 
                 if (!musica.getArtista().getId().equals(artistaId)) {
-                    throw new RuntimeException("A música '" + musica.getNome() + "' não pertence ao artista do álbum.");
+                    throw new MusicaInvalidaExcecao("A música '" + musica.getNome() + "' não pertence ao artista do álbum.");
                 }
                 musica.setAlbum(album);
                 musicas.add(musica);
             } else {
-                throw new RuntimeException("Música não encontrada para nome: " + musicaAlbumDTO.nome() + " e idArtista: " + musicaAlbumDTO.idArtista());
+                throw new MusicaInvalidaExcecao("Música não encontrada com o nome: " + musicaAlbumDTO.nome() + " e idArtista: " + musicaAlbumDTO.idArtista());
             }
         }
         return musicas;
