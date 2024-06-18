@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.harmonify.backspring.api.contracts.requests.ArtistaDTO;
-import com.harmonify.backspring.api.contracts.requests.FiltroDTO;
+import com.harmonify.backspring.api.contracts.requestsc.FiltroDTO;
 import com.harmonify.backspring.api.contracts.responses.RespArtistaDTO;
 import com.harmonify.backspring.domain.exception.RecursoNaoEncontradoExcecao;
 import com.harmonify.backspring.domain.models.Artista;

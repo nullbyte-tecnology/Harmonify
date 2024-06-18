@@ -124,15 +124,6 @@ public class AlbumServico {
         }
     }
 
-    public List<RespAlbumDTO> buscarAlbunsPorArtista(UUID artistaId){
-        List<Album> albuns = albumRepositorio.findByArtistaId(artistaId);
-
-        if (albuns.isEmpty()) throw new RecursoNaoEncontradoExcecao( "Nenhum álbum encontrado para o artista com ID: " + artistaId);
-
-        return albuns.stream()
-                .map(this::mapearParaRespAlbumDTO).toList();
-    }
-
     public void atualizarAlbum(UUID albumId, AlbumAtualizacaoDTO albumAtualizacaoDTO){
         Optional<Album> albumOptional = albumRepositorio.findById(albumId);
 
