@@ -3,7 +3,6 @@ package com.harmonify.backspring.api.controllers;
 import com.harmonify.backspring.api.contracts.requests.AlbumAtualizacaoDTO;
 import com.harmonify.backspring.api.contracts.requests.AlbumDTO;
 import com.harmonify.backspring.api.contracts.requests.FiltroAlbumDTO;
-import com.harmonify.backspring.api.contracts.requests.MusicaAlbumDTO;
 import com.harmonify.backspring.api.contracts.responses.RespAlbumDTO;
 import com.harmonify.backspring.domain.services.AlbumServico;
 import lombok.RequiredArgsConstructor;
@@ -40,14 +39,14 @@ public class AlbumControlador {
 
     @PostMapping("/{id}/adicionar-musica")
     @ResponseStatus(HttpStatus.OK)
-    public void adicionarMusicaNoAlbum(@PathVariable UUID id, @RequestBody MusicaAlbumDTO musicaAlbumDTO){
-        albumServico.adicionarMusicaNoAlbum(id, musicaAlbumDTO);
+    public void adicionarMusicaNoAlbum(@PathVariable UUID id, @RequestBody UUID idMusica){
+        albumServico.adicionarMusicaNoAlbum(id, idMusica);
     }
 
     @PostMapping("/{id}/remover-musica")
     @ResponseStatus(HttpStatus.OK)
-    public void removerMusicaDoAlbum(@PathVariable UUID id, @RequestParam String nomeMusica){
-        albumServico.removerMusicaNoAlbum(id, nomeMusica);
+    public void removerMusicaDoAlbum(@PathVariable UUID id, @RequestParam UUID idMusica){
+        albumServico.removerMusicaNoAlbum(id, idMusica);
     }
 
     @PutMapping("/{id}")

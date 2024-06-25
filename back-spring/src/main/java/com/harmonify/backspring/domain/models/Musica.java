@@ -15,12 +15,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.sql.Date;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Musica")
 public class Musica {
 

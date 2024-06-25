@@ -6,8 +6,8 @@ import java.util.UUID;
 
 public record AlbumDTO(
         String nome,
-        UUID artistaId,
-        List<MusicaAlbumDTO> musicas,
+        UUID idArtista,
+        List<UUID> idMusicas,
         String descricao,
         Date dataLancamento) {
 }
