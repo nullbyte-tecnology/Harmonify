@@ -2,6 +2,7 @@ package com.harmonify.backspring.api.controllers;
 
 import com.harmonify.backspring.api.contracts.responses.ErroDTO;
 import com.harmonify.backspring.domain.exception.DadosInvalidosExcecao;
+import com.harmonify.backspring.domain.exception.MusicaInvalidaExcecao;
 import com.harmonify.backspring.domain.exception.RecursoNaoEncontradoExcecao;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,11 @@ public class ExcecaoControlador {
 
   @ExceptionHandler(DadosInvalidosExcecao.class)
   public ResponseEntity<ErroDTO> dadosInvalidosExcecao(DadosInvalidosExcecao ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErroDTO(ex.getMessage()));
+  }
+
+  @ExceptionHandler(MusicaInvalidaExcecao.class)
+  public ResponseEntity<ErroDTO> musicaInvalidaExcecao(MusicaInvalidaExcecao ex){
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErroDTO(ex.getMessage()));
   }
 
