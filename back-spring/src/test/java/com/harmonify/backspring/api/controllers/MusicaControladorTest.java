@@ -1,20 +1,25 @@
 package com.harmonify.backspring.api.controllers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.harmonify.backspring.api.contracts.requests.FiltroMusicaDTO;
 import com.harmonify.backspring.api.contracts.requests.MusicaDTO;
-import com.harmonify.backspring.api.contracts.responses.RespostaDTO;
+import com.harmonify.backspring.api.contracts.responses.RespMusicaDTO;
 import com.harmonify.backspring.domain.services.MusicaServico;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.sql.Date;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 class MusicaControladorTest {
 
@@ -22,60 +27,77 @@ class MusicaControladorTest {
   private MusicaServico musicaServico;
 
   @InjectMocks
-  private MusicaControlador controlador;
+  private MusicaControlador musicaControlador;
 
   @BeforeEach
-  void setUp() {
+  public void setup() {
     MockitoAnnotations.openMocks(this);
   }
 
   @Test
   void testListarMusicas() {
-    List<RespostaDTO> musicasMock = List.of(
-        new RespostaDTO("Música 1", "Artista 1", "Rock", "3:30",
-            new Date(System.currentTimeMillis()), "base64encoded"),
-        new RespostaDTO("Música 2", "Artista 2", "Pop", "4:00",
-            new Date(System.currentTimeMillis()), "base64encoded")
-    );
+    FiltroMusicaDTO filtroDTO = new FiltroMusicaDTO("Queen", "Rock");
+    RespMusicaDTO musicaDTO = new RespMusicaDTO("Bohemian Rhapsody", "Queen", "Rock", "5:55", null,
+        null);
+    List<RespMusicaDTO> musicas = Arrays.asList(musicaDTO);
 
-    when(musicaServico.listarMusicas()).thenReturn(musicasMock);
+    when(musicaServico.listarMusicas(any(FiltroMusicaDTO.class))).thenReturn(musicas);
 
-    List<RespostaDTO> resultado = controlador.listarMusicas();
+    ResponseEntity<List<RespMusicaDTO>> responseEntity = musicaControlador.listarMusicas(filtroDTO);
 
-    assertEquals(musicasMock.size(), resultado.size());
-    assertEquals(musicasMock.get(0).nome(), resultado.get(0).nome());
-    assertEquals(musicasMock.get(0).artista(), resultado.get(0).artista());
-    assertEquals(musicasMock.get(0).generoMusical(), resultado.get(0).generoMusical());
-    assertEquals(musicasMock.get(0).duracao(), resultado.get(0).duracao());
-    assertEquals(musicasMock.get(0).dataLancamento(), resultado.get(0).dataLancamento());
-    assertEquals(musicasMock.get(0).foto(), resultado.get(0).foto());
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals(musicas, responseEntity.getBody());
+    verify(musicaServico, times(1)).listarMusicas(filtroDTO);
+  }
 
-    assertEquals(musicasMock.get(1).nome(), resultado.get(1).nome());
-    assertEquals(musicasMock.get(1).artista(), resultado.get(1).artista());
-    assertEquals(musicasMock.get(1).generoMusical(), resultado.get(1).generoMusical());
-    assertEquals(musicasMock.get(1).duracao(), resultado.get(1).duracao());
-    assertEquals(musicasMock.get(1).dataLancamento(), resultado.get(1).dataLancamento());
-    assertEquals(musicasMock.get(1).foto(), resultado.get(1).foto());
+  @Test
+  void testDetalharMusica() {
+    UUID id = UUID.randomUUID();
+    RespMusicaDTO musicaDTO = new RespMusicaDTO("Bohemian Rhapsody", "Queen", "Rock", "5:55", null,
+        null);
 
-    verify(musicaServico, times(1)).listarMusicas();
+    when(musicaServico.encontrarMusica(id)).thenReturn(musicaDTO);
+
+    ResponseEntity<RespMusicaDTO> responseEntity = musicaControlador.detalharMusica(id);
+
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals(musicaDTO, responseEntity.getBody());
+    verify(musicaServico, times(1)).encontrarMusica(id);
   }
 
   @Test
   void testSalvarMusica() {
-    MusicaDTO musicaDTO = new MusicaDTO("Música de Teste", "Artista de Teste", "Rock",
-        "3:30", new Date(System.currentTimeMillis()), new byte[0]);
+    MusicaDTO musicaDTO = new MusicaDTO("Bohemian Rhapsody", UUID.randomUUID(), null, "5:55", null,
+        null);
 
-    controlador.salvarMusica(musicaDTO);
+    ResponseEntity<String> responseEntity = musicaControlador.salvarMusica(musicaDTO);
 
-    ArgumentCaptor<MusicaDTO> musicaCaptor = ArgumentCaptor.forClass(MusicaDTO.class);
-    verify(musicaServico, times(1)).salvarMusica(musicaCaptor.capture());
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals("Música salva.", responseEntity.getBody());
+    verify(musicaServico, times(1)).salvarMusica(musicaDTO);
+  }
 
-    MusicaDTO musicaCapturada = musicaCaptor.getValue();
-    assertEquals(musicaDTO.nome(), musicaCapturada.nome());
-    assertEquals(musicaDTO.artista(), musicaCapturada.artista());
-    assertEquals(musicaDTO.generoMusical(), musicaCapturada.generoMusical());
-    assertEquals(musicaDTO.duracao(), musicaCapturada.duracao());
-    assertEquals(musicaDTO.lancamento(), musicaCapturada.lancamento());
-    assertEquals(musicaDTO.arquivo(), musicaCapturada.arquivo());
+  @Test
+  void testEditarMusica() {
+    UUID id = UUID.randomUUID();
+    MusicaDTO musicaDTO = new MusicaDTO("Bohemian Rhapsody", UUID.randomUUID(), null, "5:55", null,
+        null);
+
+    ResponseEntity<String> responseEntity = musicaControlador.editarMusica(id, musicaDTO);
+
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals("Música atualizada.", responseEntity.getBody());
+    verify(musicaServico, times(1)).editarMusica(id, musicaDTO);
+  }
+
+  @Test
+  void testDeletarMusica() {
+    UUID id = UUID.randomUUID();
+
+    ResponseEntity<String> responseEntity = musicaControlador.deletarMusica(id);
+
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals("Música apagada.", responseEntity.getBody());
+    verify(musicaServico, times(1)).deletarMusica(id);
   }
 }

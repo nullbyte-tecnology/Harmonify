@@ -1,40 +1,62 @@
 package com.harmonify.backspring.api.contracts.requests;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.harmonify.backspring.domain.models.Artista;
 import com.harmonify.backspring.domain.models.Musica;
+import com.harmonify.backspring.domain.models.enums.GeneroMusical;
 import java.sql.Date;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class MusicaDTOTest {
 
   @Test
-  void testConstrutorComMusica() {
-    MusicaDTO musicaDTOTeste = new MusicaDTO("Nome da Música", "Artista", "Rock", "03:45",
-        Date.valueOf("2022-01-01"), new byte[0]);
+  void testMusicaDTOCreation() {
+    String nome = "Bohemian Rhapsody";
+    UUID idArtista = UUID.randomUUID();
+    GeneroMusical genero = GeneroMusical.ROCK;
+    String duracao = "5:55";
+    Date lancamento = Date.valueOf("1975-10-31");
+    byte[] foto = new byte[]{1, 2, 3};
 
-    Musica musica = new Musica(musicaDTOTeste);
+    MusicaDTO musicaDTO = new MusicaDTO(nome, idArtista, genero, duracao, lancamento, foto);
 
-    MusicaDTO musicaDTO = new MusicaDTO(musica);
-
-    assertThat(musicaDTO.nome()).isEqualTo("Nome da Música");
-    assertThat(musicaDTO.artista()).isEqualTo("Artista");
-    assertThat(musicaDTO.generoMusical()).isEqualTo("Rock");
-    assertThat(musicaDTO.duracao()).isEqualTo("03:45");
-    assertThat(musicaDTO.lancamento()).isEqualTo(Date.valueOf("2022-01-01"));
-    assertThat(musicaDTO.arquivo()).isEqualTo(new byte[0]);
+    assertNotNull(musicaDTO);
+    assertEquals(nome, musicaDTO.nome());
+    assertEquals(idArtista, musicaDTO.idArtista());
+    assertEquals(genero, musicaDTO.genero());
+    assertEquals(duracao, musicaDTO.duracao());
+    assertEquals(lancamento, musicaDTO.lancamento());
+    assertEquals(foto, musicaDTO.foto());
   }
 
   @Test
-  void testConstrutorComValores() {
-    MusicaDTO musicaDTO = new MusicaDTO("Nome da Música", "Artista", "Rock", "03:45",
-        Date.valueOf("2022-01-01"), new byte[0]);
+  void testMusicaDTOCreationFromMusica() {
+    UUID idArtista = UUID.randomUUID();
+    Artista artista = new Artista(idArtista, "Queen", new byte[0], "Biografia", "Brasil",
+        GeneroMusical.ROCK);
+    Musica musica = new Musica(
+        new MusicaDTO(
+            "Bohemian Rhapsody",
+            idArtista,
+            GeneroMusical.ROCK,
+            "5:55",
+            Date.valueOf("1975-10-31"),
+            new byte[]{1, 2, 3}
+        ),
+        artista
+    );
 
-    assertThat(musicaDTO.nome()).isEqualTo("Nome da Música");
-    assertThat(musicaDTO.artista()).isEqualTo("Artista");
-    assertThat(musicaDTO.generoMusical()).isEqualTo("Rock");
-    assertThat(musicaDTO.duracao()).isEqualTo("03:45");
-    assertThat(musicaDTO.lancamento()).isEqualTo(Date.valueOf("2022-01-01"));
-    assertThat(musicaDTO.arquivo()).isEqualTo(new byte[0]);
+    MusicaDTO musicaDTO = new MusicaDTO(musica);
+
+    assertNotNull(musicaDTO);
+    assertEquals(musica.getNome(), musicaDTO.nome());
+    assertEquals(musica.getArtista().getId(), musicaDTO.idArtista());
+    assertEquals(musica.getGenero(), musicaDTO.genero());
+    assertEquals(musica.getDuracao(), musicaDTO.duracao());
+    assertEquals(musica.getLancamento(), musicaDTO.lancamento());
+    assertEquals(musica.getFoto(), musicaDTO.foto());
   }
 }
