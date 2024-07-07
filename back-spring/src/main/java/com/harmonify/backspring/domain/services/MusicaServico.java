@@ -57,9 +57,6 @@ public class MusicaServico {
     if(artista.isEmpty()) {
       throw new RecursoNaoEncontradoExcecao(ARTISTA_NAO_ENCONTRADA);
     }
-    if (Boolean.FALSE.equals(validarMusica(musicaDTO))) {
-      throw new DadosInvalidosExcecao("Gênero musical inválido.");
-    }
 
     musicaRepositorio.save(new Musica(musicaDTO, artista.get()));
   }
