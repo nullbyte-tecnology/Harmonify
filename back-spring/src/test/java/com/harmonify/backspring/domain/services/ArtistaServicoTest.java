@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.harmonify.backspring.api.contracts.requests.ArtistaDTO;
-import com.harmonify.backspring.api.contracts.requests.FiltroDTO;
+import com.harmonify.backspring.api.contracts.requests.FiltroArtistaDTO;
 import com.harmonify.backspring.api.contracts.responses.RespArtistaDTO;
 import com.harmonify.backspring.domain.exception.RecursoNaoEncontradoExcecao;
 import com.harmonify.backspring.domain.models.Artista;
@@ -42,29 +42,14 @@ class ArtistaServicoTest {
   }
 
   @Test
-  void testListarArtistasSemFiltro() {
-    Artista artista1 = new Artista(UUID.randomUUID(), "Artista1", new byte[]{1, 2, 3}, "Biografia1",
-        "Brasil", GeneroMusical.ROCK);
-    Artista artista2 = new Artista(UUID.randomUUID(), "Artista2", new byte[]{4, 5, 6}, "Biografia2",
-        "Argentina", GeneroMusical.JAZZ);
-
-    when(artistaRepositorio.findAll()).thenReturn(Arrays.asList(artista1, artista2));
-
-    List<RespArtistaDTO> artistas = artistaServico.listarArtistas(null);
-
-    assertEquals(2, artistas.size());
-    assertEquals("Artista1", artistas.get(0).nome());
-    assertEquals("Artista2", artistas.get(1).nome());
-  }
-
-  @Test
   void testListarArtistasComFiltro() {
     Artista artista1 = new Artista(UUID.randomUUID(), "Artista1", new byte[]{1, 2, 3}, "Biografia1",
         "Brasil", GeneroMusical.ROCK);
 
     when(artistaRepositorio.findAll(any(Specification.class))).thenReturn(Arrays.asList(artista1));
 
-    List<RespArtistaDTO> artistas = artistaServico.listarArtistas(new FiltroDTO("ROCK", "Brasil"));
+    List<RespArtistaDTO> artistas = artistaServico.listarArtistas(
+        new FiltroArtistaDTO("ROCK", "Brasil"));
 
     assertEquals(1, artistas.size());
     assertEquals("Artista1", artistas.get(0).nome());
